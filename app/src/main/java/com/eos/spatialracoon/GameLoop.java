@@ -10,8 +10,8 @@ public class GameLoop extends Thread {
 	public static final int MAX_SKIPPED_FRAMES = 5;
 	public static final int FRAME_TIME = 1000 / MAX_FPS;
 
-	private Game game;
-	private SurfaceHolder surfaceHolder;
+	private final Game game;
+	private final SurfaceHolder surfaceHolder;
 
 	public boolean isRunning = true;
 	public static final String TAG = Game.class.getSimpleName();
@@ -43,9 +43,9 @@ public class GameLoop extends Thread {
 					tiempoComienzo = System.currentTimeMillis();
 					framesASaltar = 0;    // resetear los frames saltados
 					// Actualizar estado del juego
-					game.update();
+					game.actualizar();
 					// renderizar la imagen
-					game.render(canvas);
+					game.renderizar(canvas);
 					// Calcular cuánto tardó el ciclo
 					tiempoDiferencia = System.currentTimeMillis() - tiempoComienzo;
 					// Calcular cuánto debe dormir el thread antes de la siguiente iteración
@@ -63,7 +63,7 @@ public class GameLoop extends Thread {
 
 					while (tiempoDormir < 0 && framesASaltar < MAX_SKIPPED_FRAMES) {
 						// Vamos mal de tiempo: Necesitamos ponernos al día
-						game.update(); // actualizar si rendering
+						game.actualizar(); // actualizar si rendering
 						tiempoDormir += FRAME_TIME;    // actualizar el tiempo de dormir
 						framesASaltar++;
 					}
