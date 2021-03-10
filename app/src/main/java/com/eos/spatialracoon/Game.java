@@ -36,6 +36,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private int contadorFrames = 0;
 	private boolean hacia_abajo = true;
 	private static final String TAG = GameLoop.class.getSimpleName();
+	private int touchX, touchY;
+	private boolean hasTouch;
 
 	public Game(Activity context) {
 		super(context);
@@ -46,6 +48,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		mdisp.getSize(mdispSize);
 		maxX = mdispSize.x;
 		maxY = mdispSize.y;
+		setOnTouchListener(this);
 	}
 
 	@Override
@@ -120,6 +123,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			myPaint.setColor(Color.BLACK);
 			canvas.drawArc(rectF, 90, 45, true, myPaint);
 
+			//Si ha ocurrido un toque en la pantalla "Touch", dibujar un círculo
+			if (hasTouch) {
+				canvas.drawCircle(touchX, touchY, 20, myPaint);
+			}
+
 			//dibujar un texto
 			myPaint.setStyle(Paint.Style.FILL);
 			myPaint.setTextSize(40);
@@ -144,8 +152,20 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 	}
 
-	@Override public boolean onTouch(View v, MotionEvent event) {
-		return false;
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN:
+				hasTouch = true;
+				break;
+			case MotionEvent.ACTION_UP:
+				hasTouch = false;
+				break;
+		}
+
+		touchX = (int) event.getX();
+		touchY = (int) event.getY();
+		return true;
 	}
 	/*
 	private SurfaceHolder surfaceHolder;
