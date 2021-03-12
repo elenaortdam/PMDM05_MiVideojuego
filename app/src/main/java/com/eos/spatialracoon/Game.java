@@ -14,6 +14,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
 
 	private Bitmap bmp;
@@ -37,6 +40,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private boolean hacia_abajo = true;
 	private static final String TAG = GameLoop.class.getSimpleName();
 	private int touchX, touchY;
+	List<Touch> touchs = new ArrayList<>();
 	private boolean hasTouch;
 
 	public Game(Activity context) {
@@ -125,7 +129,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 			//Si ha ocurrido un toque en la pantalla "Touch", dibujar un círculo
 			if (hasTouch) {
-				canvas.drawCircle(touchX, touchY, 20, myPaint);
+				synchronized (this) {
+					for (Touch touch : touchs) {
+						canvas.drawCircle(touch.getX(), touch.getY(),
+										  100, myPaint);
+						canvas.drawText(touch.getIndex() + "",
+										touch.getX(), touch.getY(), myPaint);
+					}
+				}
+//				canvas.drawCircle(touchX, touchY, 20, myPaint);
 			}
 
 			//dibujar un texto
@@ -147,7 +159,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 				bucle.join();
 				retry = false;
 			} catch (InterruptedException e) {
-
+				e.printStackTrace();
 			}
 		}
 	}
@@ -156,17 +168,34 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	public boolean onTouch(View v, MotionEvent event) {
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
+			case MotionEvent.ACTION_POINTER_DOWN:
 				hasTouch = true;
+				x = (int) event.getX();
+				y = (int) event.getY();
+				synchronized (this) {
+					touchs.add(new Touch(x, y, event.getActionIndex()));
+				}
+				Log.i(Game.class.getSimpleName(), String.format("Pulsado dedo %s",
+																event.getActionIndex()));
+				break;
+			case MotionEvent.ACTION_POINTER_UP:
+				synchronized (this) {
+					touchs.remove(event.getActionIndex());
+				}
 				break;
 			case MotionEvent.ACTION_UP:
+				synchronized (this) {
+					touchs.remove(event.getActionIndex());
+				}
+				Log.i(Game.class.getSimpleName(), String.format("Soltado dedo %s ultimo",
+																event.getActionIndex()));
 				hasTouch = false;
+
 				break;
 		}
-
-		touchX = (int) event.getX();
-		touchY = (int) event.getY();
 		return true;
 	}
+
 	/*
 	private SurfaceHolder surfaceHolder;
 	private GameLoop gameLoop;
@@ -223,7 +252,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	public boolean onTouch(View v, MotionEvent event) {
 		return false;
 	}
-	
+
 	 */
 
 }
