@@ -1,17 +1,30 @@
 package com.eos.spatialracoon;
 
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+	private GestureDetector gestureDetector;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		setContentView(R.layout.activity_main);
+		gestureDetector = new GestureDetector(this, new Gesture());
 		setContentView(new Game(this));
+
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		//return super.onTouchEvent(event);
+		return gestureDetector.onTouchEvent(event); //captura con detector de gestos
 	}
 
 	@Override

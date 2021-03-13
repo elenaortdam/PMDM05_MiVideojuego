@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,7 +18,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
+public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
 	private Bitmap bmp;
 	private final SurfaceHolder holder;
@@ -42,6 +43,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private int touchX, touchY;
 	List<Touch> touchs = new ArrayList<>();
 	private boolean hasTouch;
+	private final GestureDetector gestureDetector;
 
 	public Game(Activity context) {
 		super(context);
@@ -52,7 +54,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		mdisp.getSize(mdispSize);
 		maxX = mdispSize.x;
 		maxY = mdispSize.y;
-		setOnTouchListener(this);
+		gestureDetector = new GestureDetector(getContext(), new Gesture());
+		this.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (gestureDetector.onTouchEvent(event)) return false;
+
+				return false;
+			}
+		});
+//		setOnTouchListener(this);
 	}
 
 	@Override
@@ -163,7 +174,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			}
 		}
 	}
-
+/*
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		switch (event.getActionMasked()) {
@@ -194,6 +205,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 				break;
 		}
 		return true;
+	}
+
+ */
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		//return super.onTouchEvent(event);
+		return gestureDetector.onTouchEvent(event); //captura con detector de gestos
 	}
 
 	/*

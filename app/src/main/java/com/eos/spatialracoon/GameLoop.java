@@ -1,7 +1,6 @@
 package com.eos.spatialracoon;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread {
@@ -25,7 +24,7 @@ public class GameLoop extends Thread {
 	@Override
 	public void run() {
 		Canvas canvas;
-		Log.d(TAG, "Comienza el game loop");
+//		Log.d(TAG, "Comienza el game loop");
 
 		long tiempoComienzo;        // Tiempo en el que el ciclo comenzó
 		long tiempoDiferencia;        // Tiempo que duró el ciclo
@@ -75,7 +74,7 @@ public class GameLoop extends Thread {
 					surfaceHolder.unlockCanvasAndPost(canvas);
 				}
 			}
-			Log.d(TAG, "Nueva iteración!");
+//			Log.d(TAG, "Nueva iteración!");
 		}
 		/*
 		Canvas canvas;
