@@ -2,7 +2,7 @@ package com.eos.spatialracoon;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,8 +12,9 @@ public class StartActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
-		Button startButton = findViewById(R.id.start_button);
-		startButton.setOnClickListener(v -> {
+		View racoon = findViewById(R.id.mapache_nave);
+		//Button startButton = findViewById(R.id.start_button);
+		racoon.setOnClickListener(v -> {
 			this.startActivity(new Intent(this, GameActivity.class));
 		});
 	}
