@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">spatialraccoon</string>
+    <string name="app_name">Mapache Espacial</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="start_game">Comenzar</string>
 </resources>
