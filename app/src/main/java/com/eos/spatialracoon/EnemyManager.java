@@ -1,5 +1,4 @@
 package com.eos.spatialracoon;
 
-public class Explosion {
-
+public class EnemyManager {
 }

@@ -5,11 +5,12 @@ import android.view.MotionEvent;
 
 import static android.content.ContentValues.TAG;
 
+@Deprecated
 public class Gesture extends android.view.GestureDetector.SimpleOnGestureListener {
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		Log.i(TAG, "onSingleTapUp");
+		Log.i(TAG, String.format("onSingleTapUp x: %s, y: %s", e.getX(), e.getY()));
 		return super.onSingleTapUp(e);
 	}
 

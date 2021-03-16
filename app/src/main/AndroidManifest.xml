@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.eos.spatialracoon">
-
+    <!--TODO: elena volver a poner el main al que estaba-->
     <application
             android:allowBackup="true"
             android:icon="@drawable/mapache_nave"
@@ -10,15 +10,17 @@
             android:theme="@style/Theme.Spatialraccoon">
         <activity android:name=".GameOverActivity" />
         <activity android:name=".StartActivity">
+
+        </activity>
+        <activity
+                android:name=".GameActivity"
+                android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-                android:name=".GameActivity"
-                android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

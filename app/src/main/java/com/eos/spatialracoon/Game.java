@@ -2,18 +2,24 @@ package com.eos.spatialracoon;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.RectF;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+
+import com.eos.spatialracoon.sprites.buttons.CircleButton;
+import com.eos.spatialracoon.sprites.buttons.ControlButton;
+import com.eos.spatialracoon.sprites.buttons.SquareButton;
+import com.eos.spatialracoon.sprites.buttons.TriangleButton;
+import com.eos.spatialracoon.sprites.buttons.XButton;
+import com.eos.spatialracoon.sprites.characters.GameCharacter;
+import com.eos.spatialracoon.sprites.characters.Raccoon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +29,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 	private Bitmap bmp;
 	private final SurfaceHolder holder;
 	private GameLoop bucle;
+	private final int[] availableBackgrounds = {R.drawable.bg1};
+	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
+	private final List<ControlButton> buttons = new ArrayList<>();
+	List<GameCharacter> characters = new ArrayList<>();
 
-	private int x = 0, y = 0; //Coordenadas x e y para desplazar
+	private Bitmap background;
 
-	private static final int bmpInicialx = 500;
-	private static final int bmpInicialy = 500;
+	private int x = 0, y = 0;
+
 	private static final int rectInicialx = 450;
 	private static final int rectInicialy = 450;
 	private static final int arcoInicialx = 50;
@@ -35,8 +45,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int textoInicialx = 50;
 	private static final int textoInicialy = 20;
 
-	private int maxX = 0;
-	private int maxY = 0;
 	private int contadorFrames = 0;
 	private boolean hacia_abajo = true;
 	private static final String TAG = GameLoop.class.getSimpleName();
@@ -44,16 +52,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 	List<Touch> touchs = new ArrayList<>();
 	private boolean hasTouch;
 	private final GestureDetector gestureDetector;
+	private final Screen screen;
 
-	public Game(Activity context) {
-		super(context);
+	public Game(Activity activity) {
+		super(activity);
 		holder = getHolder();
 		holder.addCallback(this);
-		Display mdisp = context.getWindowManager().getDefaultDisplay();
-		Point mdispSize = new Point();
-		mdisp.getSize(mdispSize);
-		maxX = mdispSize.x;
-		maxY = mdispSize.y;
+
 		gestureDetector = new GestureDetector(getContext(), new Gesture());
 		this.setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -63,6 +68,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 				return false;
 			}
 		});
+		this.screen = Utilities.calculateScreenSize(activity);
+		loadBackground();
+		loadControlButtons();
+		GameCharacter racoon = new Raccoon(this.getContext());
+		characters.add(racoon);
 //		setOnTouchListener(this);
 	}
 
@@ -89,12 +99,37 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
+	public void loadBackground() {
+		//cargamos todos los fondos en un array
+		for (int i = 0; i < backgroundImages.length; i++) {
+			background = BitmapFactory.decodeResource(getResources(),
+													  availableBackgrounds[i]);
+			if (backgroundImages[i] == null)
+				backgroundImages[i] = Bitmap.createScaledBitmap(background,
+																screen.getWidth(),
+																screen.getHeight(),
+																true);
+			background.recycle();
+		}
+	}
+
+	public void loadControlButtons() {
+		ControlButton square = new SquareButton(this.getContext());
+		ControlButton circle = new CircleButton(this.getContext());
+		ControlButton x = new XButton(this.getContext());
+		ControlButton triangle = new TriangleButton(this.getContext());
+		this.buttons.add(square);
+		this.buttons.add(circle);
+		this.buttons.add(x);
+		this.buttons.add(triangle);
+	}
+
 	/**
 	 * Este método actualiza el estado del juego. Contiene la lógica del videojuego
 	 * generando los nuevos estados y dejando listo el sistema para un repintado.
 	 */
 	public void actualizar() {
-		if (x > maxX)
+		if (x > screen.getWidth())
 			hacia_abajo = false;
 
 		if (x == 0)
@@ -117,44 +152,54 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 		if (canvas != null) {
 			Paint myPaint = new Paint();
 			myPaint.setStyle(Paint.Style.STROKE);
+			myPaint.setColor(Color.WHITE);
+			canvas.drawBitmap(backgroundImages[0], 0, -1, null);
+			for (ControlButton button : buttons) {
+				button.draw(canvas, myPaint);
+			}
+			for (GameCharacter character : characters) {
+				character.draw(canvas, myPaint);
+			}
+
+//			myPaint.setStyle(Paint.Style.STROKE);
 
 			//Toda el canvas en rojo
-			canvas.drawColor(Color.RED);
+//			canvas.drawColor(Color.RED);
 
 			//Dibujar muñeco de android
 //			bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background);
 //			canvas.drawBitmap(bmp, bmpInicialx + x, bmpInicialy + y, null);
 
 			//Cambiar color y tamaño de brocha
-			myPaint.setStrokeWidth(10);
-			myPaint.setColor(Color.BLUE);
+//			myPaint.setStrokeWidth(10);
+//			myPaint.setColor(Color.BLUE);
 
 			//dibujar rectángulo de 300x300
-			canvas.drawRect(rectInicialx + x, rectInicialy + y, 300, 300, myPaint);
+//			canvas.drawRect(rectInicialx + x, rectInicialy + y, 300, 300, myPaint);
 
 			//dibujar óvalo y arco
-			RectF rectF = new RectF(arcoInicialx + x, arcoInicialy + y, 200, 120);
-			canvas.drawOval(rectF, myPaint);
-			myPaint.setColor(Color.BLACK);
-			canvas.drawArc(rectF, 90, 45, true, myPaint);
+//			RectF rectF = new RectF(arcoInicialx + x, arcoInicialy + y, 200, 120);
+//			canvas.drawOval(rectF, myPaint);
+//			myPaint.setColor(Color.BLACK);
+//			canvas.drawArc(rectF, 90, 45, true, myPaint);
 
 			//Si ha ocurrido un toque en la pantalla "Touch", dibujar un círculo
 			if (hasTouch) {
 				synchronized (this) {
 					for (Touch touch : touchs) {
-						canvas.drawCircle(touch.getX(), touch.getY(),
-										  100, myPaint);
-						canvas.drawText(touch.getIndex() + "",
-										touch.getX(), touch.getY(), myPaint);
+//						canvas.drawCircle(touch.getX(), touch.getY(),
+//										  100, myPaint);
+//						canvas.drawText(touch.getIndex() + "",
+//										touch.getX(), touch.getY(), myPaint);
 					}
 				}
 //				canvas.drawCircle(touchX, touchY, 20, myPaint);
 			}
 
 			//dibujar un texto
-			myPaint.setStyle(Paint.Style.FILL);
-			myPaint.setTextSize(40);
-			canvas.drawText("Frames ejecutados:" + contadorFrames, textoInicialx, textoInicialy + y, myPaint);
+//			myPaint.setStyle(Paint.Style.FILL);
+//			myPaint.setTextSize(40);
+//			canvas.drawText("Frames ejecutados:" + contadorFrames, textoInicialx, textoInicialy + y, myPaint);
 
 		}
 	}

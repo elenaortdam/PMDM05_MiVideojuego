@@ -46,4 +46,20 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="306dp" />
 
+    <TextView
+            android:text="@string/record"
+            android:layout_width="187dp"
+            android:layout_height="52dp"
+            android:gravity="center"
+            android:id="@+id/record"
+            android:textSize="100sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/flappy_birdy"
+            android:layout_marginEnd="30dp"
+            android:layout_alignEnd="@+id/mapache_nave"
+            android:layout_marginStart="26dp"
+            android:layout_alignStart="@+id/mapache_nave"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="625dp" />
+
 </RelativeLayout>
