@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.Figure;
+import com.eos.spatialracoon.constants.ButtonName;
 
 public class SquareButton extends ControlButton {
 
@@ -15,7 +15,7 @@ public class SquareButton extends ControlButton {
 													R.drawable.square_button));
 		setX(super.getScreen().getWidth() / 1.25f);
 		setY(super.getScreen().getHeight() / 1.5f);
-		this.name = Figure.SQUARE;
+		this.name = ButtonName.SQUARE;
 	}
 
 	@Override

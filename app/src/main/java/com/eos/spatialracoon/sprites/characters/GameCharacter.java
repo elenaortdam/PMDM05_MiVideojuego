@@ -8,13 +8,15 @@ import android.util.Size;
 
 import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.Utilities;
+import com.eos.spatialracoon.constants.CharacterName;
 
-public class GameCharacter {
+public abstract class GameCharacter {
 
 	//	private int lifes;
 	private Bitmap image;
 	private final Context context;
 	private final Screen screen;
+	private CharacterName name;
 
 	private float x, y;
 
@@ -34,10 +36,7 @@ public class GameCharacter {
 											   false);
 	}
 
-	public void draw(Canvas canvas, Paint paint) {
-		canvas.drawBitmap(this.image, this.getX(), this.getY(), paint);
-
-	}
+	public abstract void draw(Canvas canvas, Paint paint);
 
 	public float getX() {
 		return x;
@@ -47,11 +46,11 @@ public class GameCharacter {
 		return y;
 	}
 
-	public void setX(float x) {
+	protected void setX(float x) {
 		this.x = x;
 	}
 
-	public void setY(float y) {
+	protected void setY(float y) {
 		this.y = y;
 	}
 
@@ -69,5 +68,13 @@ public class GameCharacter {
 
 	public Screen getScreen() {
 		return screen;
+	}
+
+	public CharacterName getName() {
+		return name;
+	}
+
+	protected void setName(CharacterName name) {
+		this.name = name;
 	}
 }

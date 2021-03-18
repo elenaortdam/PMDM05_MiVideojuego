@@ -7,24 +7,28 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.eos.spatialracoon.constants.CharacterName;
+import com.eos.spatialracoon.level.Level;
+import com.eos.spatialracoon.level.LevelSetting;
 import com.eos.spatialracoon.sprites.buttons.CircleButton;
 import com.eos.spatialracoon.sprites.buttons.ControlButton;
 import com.eos.spatialracoon.sprites.buttons.SquareButton;
 import com.eos.spatialracoon.sprites.buttons.TriangleButton;
 import com.eos.spatialracoon.sprites.buttons.XButton;
+import com.eos.spatialracoon.sprites.characters.Enemy;
 import com.eos.spatialracoon.sprites.characters.GameCharacter;
 import com.eos.spatialracoon.sprites.characters.Raccoon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Game extends SurfaceView implements SurfaceHolder.Callback {
+public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
 
 	private Bitmap bmp;
 	private final SurfaceHolder holder;
@@ -32,11 +36,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 	private final int[] availableBackgrounds = {R.drawable.bg1};
 	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
-	List<GameCharacter> characters = new ArrayList<>();
+	private final List<GameCharacter> characters = new ArrayList<>();
+	private final LevelSetting level;
 
 	private Bitmap background;
 
-	private int x = 0, y = 0;
+	private final int x = 0;
+	private final int y = 0;
 
 	private static final int rectInicialx = 450;
 	private static final int rectInicialy = 450;
@@ -46,12 +52,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int textoInicialy = 20;
 
 	private int contadorFrames = 0;
-	private boolean hacia_abajo = true;
+	private final boolean hacia_abajo = true;
 	private static final String TAG = GameLoop.class.getSimpleName();
 	private int touchX, touchY;
 	List<Touch> touchs = new ArrayList<>();
 	private boolean hasTouch;
-	private final GestureDetector gestureDetector;
+	//	private final GestureDetector gestureDetector;
 	private final Screen screen;
 
 	public Game(Activity activity) {
@@ -59,21 +65,25 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 		holder = getHolder();
 		holder.addCallback(this);
 
-		gestureDetector = new GestureDetector(getContext(), new Gesture());
-		this.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (gestureDetector.onTouchEvent(event)) return false;
-
-				return false;
-			}
-		});
+//		gestureDetector = new GestureDetector(getContext(), new Gesture());
+//		this.setOnTouchListener(new OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				if (gestureDetector.onTouchEvent(event)) return false;
+//
+//				return false;
+//			}
+//		});
 		this.screen = Utilities.calculateScreenSize(activity);
 		loadBackground();
 		loadControlButtons();
 		GameCharacter racoon = new Raccoon(this.getContext());
 		characters.add(racoon);
-//		setOnTouchListener(this);
+		setOnTouchListener(this);
+		Level level = new Level();
+		this.level = level.getLevelSettings(1);
+		createEnemy();
+		System.out.println("Algo");
 	}
 
 	@Override
@@ -124,31 +134,26 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 		this.buttons.add(triangle);
 	}
 
+	public void createEnemy() {
+		for (int i = 0; i < level.getInitialEnemies(); i++) {
+			characters.add(new Enemy(this, level.getLevel()));
+		}
+	}
+
 	/**
 	 * Este método actualiza el estado del juego. Contiene la lógica del videojuego
 	 * generando los nuevos estados y dejando listo el sistema para un repintado.
 	 */
-	public void actualizar() {
-		if (x > screen.getWidth())
-			hacia_abajo = false;
+	public void update() {
 
-		if (x == 0)
-			hacia_abajo = true;
-
-		if (hacia_abajo) {
-			x = x + 1;
-			y = y + 1;
-		} else {
-			x = x - 1;
-			y = y - 1;
-		}
+//		createEnemy();
 		contadorFrames++;
 	}
 
 	/**
 	 * Este método dibuja el siguiente paso de la animación correspondiente
 	 */
-	public void renderizar(Canvas canvas) {
+	public void render(Canvas canvas) {
 		if (canvas != null) {
 			Paint myPaint = new Paint();
 			myPaint.setStyle(Paint.Style.STROKE);
@@ -219,9 +224,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 	}
-/*
+
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+
+		int index;
+
+		float x, y;
+
+		index = event.getActionIndex();
+
+		x = event.getX();
+		y = event.getY();
+
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 			case MotionEvent.ACTION_POINTER_DOWN:
@@ -229,14 +244,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 				x = (int) event.getX();
 				y = (int) event.getY();
 				synchronized (this) {
-					touchs.add(new Touch(x, y, event.getActionIndex()));
+					touchs.add(new Touch((int) x, (int) y, event.getActionIndex()));
 				}
 				Log.i(Game.class.getSimpleName(), String.format("Pulsado dedo %s",
 																event.getActionIndex()));
 				break;
 			case MotionEvent.ACTION_POINTER_UP:
 				synchronized (this) {
-					touchs.remove(event.getActionIndex());
+					touchs.remove(index);
+					for (int i = 0; i < 3; i++)
+						buttons.get(i).checkButtonRelased(touchs);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -246,18 +263,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 				Log.i(Game.class.getSimpleName(), String.format("Soltado dedo %s ultimo",
 																event.getActionIndex()));
 				hasTouch = false;
-
+				for (int i = 0; i < 3; i++)
+					buttons.get(i).checkButtonRelased(touchs);
 				break;
 		}
 		return true;
-	}
-
- */
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		//return super.onTouchEvent(event);
-		return gestureDetector.onTouchEvent(event); //captura con detector de gestos
 	}
 
 	/*
@@ -318,5 +328,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	 */
+
+	public List<GameCharacter> getCharacters(CharacterName name) {
+		return this.characters.stream()
+							  .filter(character -> character.getName() != null)
+							  .filter(character -> character.getName() == name)
+							  .collect(Collectors.toList());
+
+	}
+
+	public int getScreenHeight() {
+		return this.screen.getHeight();
+	}
+
+	public int getScreenWidth() {
+		return this.screen.getWidth();
+	}
 
 }

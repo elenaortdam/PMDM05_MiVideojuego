@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.Touch;
 import com.eos.spatialracoon.Utilities;
-import com.eos.spatialracoon.constants.Figure;
+import com.eos.spatialracoon.constants.ButtonName;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public abstract class ControlButton {
 	private float x;
 	private float y;
 	protected Bitmap image;
-	protected Figure name;
+	protected ButtonName name;
 	private boolean touched;
 	private final Context context;
 	private final int DIMENSION = 150;

@@ -1,6 +1,6 @@
 package com.eos.spatialracoon.constants;
 
-public enum Figure {
+public enum ButtonName {
 
 	CIRCLE,
 	SQUARE,

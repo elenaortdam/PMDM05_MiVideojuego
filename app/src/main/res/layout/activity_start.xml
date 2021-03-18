@@ -48,18 +48,18 @@
 
     <TextView
             android:text="@string/record"
-            android:layout_width="187dp"
-            android:layout_height="52dp"
+            android:layout_width="226dp"
+            android:layout_height="50dp"
             android:gravity="center"
             android:id="@+id/record"
-            android:textSize="100sp"
+            android:textSize="35sp"
             android:textColor="@color/white"
-            android:fontFamily="@font/flappy_birdy"
-            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/pac_font"
+            android:layout_marginEnd="7dp"
             android:layout_alignEnd="@+id/mapache_nave"
-            android:layout_marginStart="26dp"
+            android:layout_marginStart="10dp"
             android:layout_alignStart="@+id/mapache_nave"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="625dp" />
+            android:layout_marginBottom="616dp" />
 
 </RelativeLayout>

@@ -5,7 +5,7 @@ import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread {
 
-	private final static int MAX_FPS = 30;
+	public final static int MAX_FPS = 30;
 	public static final int MAX_SKIPPED_FRAMES = 5;
 	public static final int FRAME_TIME = 1000 / MAX_FPS;
 
@@ -42,9 +42,9 @@ public class GameLoop extends Thread {
 					tiempoComienzo = System.currentTimeMillis();
 					framesASaltar = 0;    // resetear los frames saltados
 					// Actualizar estado del juego
-					game.actualizar();
+					game.update();
 					// renderizar la imagen
-					game.renderizar(canvas);
+					game.render(canvas);
 					// Calcular cuánto tardó el ciclo
 					tiempoDiferencia = System.currentTimeMillis() - tiempoComienzo;
 					// Calcular cuánto debe dormir el thread antes de la siguiente iteración
@@ -62,7 +62,7 @@ public class GameLoop extends Thread {
 
 					while (tiempoDormir < 0 && framesASaltar < MAX_SKIPPED_FRAMES) {
 						// Vamos mal de tiempo: Necesitamos ponernos al día
-						game.actualizar(); // actualizar si rendering
+						game.update(); // actualizar si rendering
 						tiempoDormir += FRAME_TIME;    // actualizar el tiempo de dormir
 						framesASaltar++;
 					}

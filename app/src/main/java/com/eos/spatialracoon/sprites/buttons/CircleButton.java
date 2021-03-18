@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.Figure;
+import com.eos.spatialracoon.constants.ButtonName;
 
 public class CircleButton extends ControlButton {
 
@@ -13,6 +13,6 @@ public class CircleButton extends ControlButton {
 													R.drawable.circle_button));
 		setX(super.getScreen().getWidth() / 1.1f);
 		setY(super.getScreen().getHeight() / 1.5f);
-		this.name = Figure.CIRCLE;
+		this.name = ButtonName.CIRCLE;
 	}
 }

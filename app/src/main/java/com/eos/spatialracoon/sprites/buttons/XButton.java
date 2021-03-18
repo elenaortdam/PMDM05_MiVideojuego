@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.Figure;
+import com.eos.spatialracoon.constants.ButtonName;
 
 public class XButton extends ControlButton {
 
@@ -13,6 +13,6 @@ public class XButton extends ControlButton {
 													R.drawable.x_button));
 		setX(super.getScreen().getWidth() / 1.175f);
 		setY(super.getScreen().getHeight() / 1.235f);
-		this.name = Figure.SQUARE;
+		this.name = ButtonName.SQUARE;
 	}
 }

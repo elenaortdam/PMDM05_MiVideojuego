@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.Figure;
+import com.eos.spatialracoon.constants.ButtonName;
 
 public class TriangleButton extends ControlButton {
 
@@ -13,6 +13,6 @@ public class TriangleButton extends ControlButton {
 													R.drawable.triangle_button));
 		setX(super.getScreen().getWidth() / 1.175f);
 		setY(super.getScreen().getHeight() / 1.90f);
-		this.name = Figure.TRIANGLE;
+		this.name = ButtonName.TRIANGLE;
 	}
 }
