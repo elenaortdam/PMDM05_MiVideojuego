@@ -90,7 +90,7 @@ public class Enemy extends GameCharacter {
 
 	private ButtonName getRandomFigure() {
 		int randomFigure = generateRandom(0, 3);
-		return ButtonName.values()[1];
+		return ButtonName.values()[3];
 	}
 
 	private int generateRandom(int min, int max) {
@@ -170,8 +170,16 @@ public class Enemy extends GameCharacter {
 	private void drawX(Canvas canvas, Paint paint) {
 		paint.setColor(Color.WHITE);
 		paint.setStrokeWidth(STROKE_WIDTH);
-		canvas.drawLine(this.x, this.y, 100, 100, paint);
-		canvas.drawLine(100, this.y, this.x, 100, paint);
+
+		int size = 50;
+		int newX = 100;
+		int newY = 500;
+
+		float stopX = newX + size;
+		float stopY = (stopX - newX) + newY;
+
+		canvas.drawLine(newX, newY, stopX, stopY, paint);
+		canvas.drawLine(newX, stopY, stopX, newY, paint);
 
 	}
 
