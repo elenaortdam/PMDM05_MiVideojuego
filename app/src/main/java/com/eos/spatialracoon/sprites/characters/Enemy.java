@@ -46,8 +46,6 @@ public class Enemy extends GameCharacter {
 	private final int level;
 	private boolean alive = true;
 
-	//TODO: elena ¿hacer un zona excluida para los botones y la zona cerca del mapache?
-
 	public Enemy(Game game, int level) {
 		super(game.getContext(), BitmapFactory.decodeResource(game.getContext().getResources(),
 															  R.drawable.meteroid),
@@ -57,6 +55,9 @@ public class Enemy extends GameCharacter {
 		Point point = getRandomBorderPoint(this.screen);
 		this.x = point.x;
 		this.y = point.y;
+		if (x <= x / 2) {
+			super.flipImage();
+		}
 		this.level = level;
 		Level levelSetting = new Level();
 		float ENEMY_SPEED = game.getHeight() / 20f / GameLoop.MAX_FPS;
@@ -72,20 +73,21 @@ public class Enemy extends GameCharacter {
 		final float X = 0.5f;
 		final float MIN = 0.5f;
 		Point point = new Point();
-		//TODO: elena probar que salen en la parte superior
-		int height = screen.getHeight() - 200;
-		int width = screen.getWidth() - 200;
+		int height = screen.getHeight() - super.getImageHeight();
+		int width = screen.getWidth() - super.getImageWidth();
+		//Que aparezcan solo por la parte de arriba de la pantalla
+		int middleScreen = height / 2;
 		if (Math.random() <= X) {
 			if (Math.random() <= MIN) {
-				point.set(0, generateRandom(0, height));
+				point.set(0, generateRandom(0, middleScreen));
 			} else {
-				point.set(width, generateRandom(0, height));
+				point.set(width, generateRandom(0, middleScreen));
 			}
 		} else {
 			if (Math.random() <= MIN) {
 				point.set(generateRandom(0, width), 0);
 			} else {
-				point.set(generateRandom(0, width), height);
+				point.set(generateRandom(0, width), middleScreen);
 			}
 		}
 		return point;

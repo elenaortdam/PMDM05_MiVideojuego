@@ -3,7 +3,9 @@ package com.eos.spatialracoon.sprites.characters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.util.Size;
 
 import com.eos.spatialracoon.Screen;
@@ -36,6 +38,16 @@ public abstract class GameCharacter {
 											   false);
 	}
 
+	protected void flipImage() {
+		Matrix matrix = new Matrix();
+		matrix.preScale(-1, 1);
+		Bitmap src = this.image;
+		this.image = Bitmap.createBitmap(src, (int) this.x, (int) this.y, src.getWidth(),
+										 src.getHeight(), matrix, false);
+		this.image.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+//		this.image = dst;
+	}
+
 	public abstract void draw(Canvas canvas, Paint paint);
 
 	public float getX() {
@@ -54,11 +66,11 @@ public abstract class GameCharacter {
 		this.y = y;
 	}
 
-	public int getWidth() {
+	public int getImageWidth() {
 		return image.getWidth();
 	}
 
-	public int getHeight() {
+	public int getImageHeight() {
 		return image.getHeight();
 	}
 

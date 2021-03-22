@@ -13,6 +13,6 @@ public class XButton extends ControlButton {
 													R.drawable.x_button));
 		setX(super.getScreen().getWidth() / 1.175f);
 		setY(super.getScreen().getHeight() / 1.235f);
-		this.name = ButtonName.SQUARE;
+		this.name = ButtonName.X;
 	}
 }
