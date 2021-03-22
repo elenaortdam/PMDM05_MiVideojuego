@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -77,7 +76,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		holder = getHolder();
 		holder.addCallback(this);
 
-		//TODO: elena ver si funciona ok
 		this.screen = Utilities.calculateScreenSize(getContext());
 		loadBackground();
 		loadControlButtons();
@@ -160,9 +158,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 
 		for (ControlButton button : this.buttons) {
+			//TODO: elena test NPE
 			if (button.isTouched()) {
 				Integer pressedQuantity =
-						this.buttonsPressed.getOrDefault(button, null);
+						this.buttonsPressed.get(button);
 				if (pressedQuantity == null) {
 					this.buttonsPressed.put(button.getName(), 1);
 				} else {
@@ -174,7 +173,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		for (GameCharacter character : characters) {
 			if (character.getName().equals(CharacterName.METEOROID)) {
 				Enemy enemy = (Enemy) character;
-//				enemy.moveEnemy(levelSetting);
+				enemy.moveEnemy(levelSetting);
 			}
 		}
 		//Eliminamos las figuras de los enemigos
@@ -324,21 +323,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 						button.isTouched(x, y);
 					}
 				}
-				Log.i(Game.class.getSimpleName(), "Pulsado dedo " + index + ".");
 				break;
-//			case MotionEvent.ACTION_POINTER_UP:
-//				synchronized (this) {
-//					touchs.remove(index);
-//				}
-//				Log.i(Game.class.getSimpleName(), "Soltado dedo " + index + ".");
-//				break;
-//			case MotionEvent.ACTION_UP:
-//				synchronized (this) {
-//					touchs.remove(index);
-//				}
-//				Log.i(Game.class.getSimpleName(), "Soltado dedo " + index + ".ultimo.");
-//				hasTouch = false;
-//				break;
 		}
 		return true;
 	}

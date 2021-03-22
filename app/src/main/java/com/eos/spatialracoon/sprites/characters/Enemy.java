@@ -31,7 +31,7 @@ public class Enemy extends GameCharacter {
 
 	private final float speed;
 	private float x;
-	private final float y;
+	private float y;
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
 	private Bitmap image;
 
@@ -41,7 +41,7 @@ public class Enemy extends GameCharacter {
 	//TODO: elena poner la puntuación de cada enemigo
 	private int lifes;
 
-	private Game game;
+	private final Game game;
 	private Context context;
 	private final int level;
 	private boolean alive = true;
@@ -50,7 +50,7 @@ public class Enemy extends GameCharacter {
 		super(game.getContext(), BitmapFactory.decodeResource(game.getContext().getResources(),
 															  R.drawable.meteroid),
 			  new Size(200, 200));
-
+		this.game = game;
 		this.screen = super.getScreen();
 		Point point = getRandomBorderPoint(this.screen);
 		this.x = point.x;
@@ -115,24 +115,16 @@ public class Enemy extends GameCharacter {
 		} else {
 			this.x -= levelSetting.getEnemySpeed();
 		}
-/*
-
-
- if(Math.abs(coordenada_x-juego.xNave)<VELOCIDAD_ENEMIGO_INTELIGENTE)
- coordenada_x=juego.xNave; //si está muy cerca se pone a su altura
- if( coordenada_y>=juego.AltoPantalla-juego.enemigo_listo.getHeight()
- && direccion_vertical==1)
- direccion_vertical=-1;
- if(coordenada_y<=0 && direccion_vertical ==-1)
- direccion_vertical=1;
- coordenada_y+=direccion_vertical*VELOCIDAD_ENEMIGO_INTELIGENTE;
- */
+		if (raccoon.getY() - this.getImageHeight() > this.getY()) {
+			this.y += levelSetting.getEnemySpeed();
+		} else {
+			this.y -= levelSetting.getEnemySpeed();
+		}
 	}
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
-//		canvas.drawBitmap(super.getImage(), 500, 500, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
 			switch (controlButtonName) {
 				case X:

@@ -5,7 +5,7 @@ import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread {
 
-	public final static int MAX_FPS = 30;
+	public final static int MAX_FPS = 20;
 	public static final int MAX_SKIPPED_FRAMES = 5;
 	public static final int FRAME_TIME = 1000 / MAX_FPS;
 
@@ -24,7 +24,6 @@ public class GameLoop extends Thread {
 	@Override
 	public void run() {
 		Canvas canvas;
-//		Log.d(TAG, "Comienza el game loop");
 
 		long tiempoComienzo;        // Tiempo en el que el ciclo comenzó
 		long tiempoDiferencia;        // Tiempo que duró el ciclo
@@ -45,7 +44,6 @@ public class GameLoop extends Thread {
 					game.update();
 					// renderizar la imagen
 					game.render(canvas);
-					// Calcular cuánto tardó el ciclo
 					tiempoDiferencia = System.currentTimeMillis() - tiempoComienzo;
 					// Calcular cuánto debe dormir el thread antes de la siguiente iteración
 					tiempoDormir = (int) (FRAME_TIME - tiempoDiferencia);

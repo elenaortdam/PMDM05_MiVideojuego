@@ -45,7 +45,6 @@ public abstract class GameCharacter {
 		this.image = Bitmap.createBitmap(src, (int) this.x, (int) this.y, src.getWidth(),
 										 src.getHeight(), matrix, false);
 		this.image.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-//		this.image = dst;
 	}
 
 	public abstract void draw(Canvas canvas, Paint paint);
