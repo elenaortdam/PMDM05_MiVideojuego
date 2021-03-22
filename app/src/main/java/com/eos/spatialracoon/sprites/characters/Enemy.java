@@ -21,26 +21,30 @@ import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Enemy extends GameCharacter {
 
 	private final int STROKE_WIDTH = 8;
 
 	private final float speed;
-	private final float x;
+	private float x;
 	private final float y;
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
 	private Bitmap image;
-	//TODO: elena ver si dependiendo de las coordenadas sale por la derecha o la izquierda
 
-	@Deprecated
-	private int lifes;
+	//TODO: elena ver si dependiendo de las coordenadas sale por la derecha o la izquierda
 	private final Screen screen;
+	private int points;
+	//TODO: elena poner la puntuación de cada enemigo
+	private int lifes;
 
 	private Game game;
 	private Context context;
 	private final int level;
+	private boolean alive = true;
 
 	//TODO: elena ¿hacer un zona excluida para los botones y la zona cerca del mapache?
 
@@ -49,7 +53,6 @@ public class Enemy extends GameCharacter {
 															  R.drawable.meteroid),
 			  new Size(200, 200));
 
-//		this.screen = Utilities.calculateScreenSize(this.context);
 		this.screen = super.getScreen();
 		Point point = getRandomBorderPoint(this.screen);
 		this.x = point.x;
@@ -66,20 +69,20 @@ public class Enemy extends GameCharacter {
 	}
 
 	private Point getRandomBorderPoint(Screen screen) {
-		final byte X = 0;
-		final byte MIN = 0;
+		final float X = 0.5f;
+		final float MIN = 0.5f;
 		Point point = new Point();
+		//TODO: elena probar que salen en la parte superior
 		int height = screen.getHeight() - 200;
 		int width = screen.getWidth() - 200;
-		//TODO: elena mirar esto porque siempre sale 0 con algo y nunca sale igual el if de dentro igual
-		if (Math.random() == X) {
-			if (Math.random() == MIN) {
+		if (Math.random() <= X) {
+			if (Math.random() <= MIN) {
 				point.set(0, generateRandom(0, height));
 			} else {
 				point.set(width, generateRandom(0, height));
 			}
 		} else {
-			if (Math.random() == MIN) {
+			if (Math.random() <= MIN) {
 				point.set(generateRandom(0, width), 0);
 			} else {
 				point.set(generateRandom(0, width), height);
@@ -90,7 +93,7 @@ public class Enemy extends GameCharacter {
 
 	private ButtonName getRandomFigure() {
 		int randomFigure = generateRandom(0, 3);
-		return ButtonName.values()[3];
+		return ButtonName.values()[randomFigure];
 	}
 
 	private int generateRandom(int min, int max) {
@@ -98,14 +101,30 @@ public class Enemy extends GameCharacter {
 
 	}
 
-	public void moveEnemy() {
+	public void moveEnemy(LevelSetting levelSetting) {
 		List<GameCharacter> characters = game.getCharacters(CharacterName.RACCOON);
 		if (characters.isEmpty()) {
 			Log.e(getClass().getSimpleName(),
 				  "No se ha encontrado al personaje principal");
 		}
 		GameCharacter raccoon = characters.get(0);
+		if (raccoon.getX() > this.x) {
+			this.x += levelSetting.getEnemySpeed();
+		} else {
+			this.x -= levelSetting.getEnemySpeed();
+		}
+/*
 
+
+ if(Math.abs(coordenada_x-juego.xNave)<VELOCIDAD_ENEMIGO_INTELIGENTE)
+ coordenada_x=juego.xNave; //si está muy cerca se pone a su altura
+ if( coordenada_y>=juego.AltoPantalla-juego.enemigo_listo.getHeight()
+ && direccion_vertical==1)
+ direccion_vertical=-1;
+ if(coordenada_y<=0 && direccion_vertical ==-1)
+ direccion_vertical=1;
+ coordenada_y+=direccion_vertical*VELOCIDAD_ENEMIGO_INTELIGENTE;
+ */
 	}
 
 	@Override
@@ -168,18 +187,18 @@ public class Enemy extends GameCharacter {
 	}
 
 	private void drawX(Canvas canvas, Paint paint) {
-		paint.setColor(Color.WHITE);
+		paint.setColor(Color.parseColor("#2E6DB4")); //Celtic blue "#2E6DB4"
 		paint.setStrokeWidth(STROKE_WIDTH);
+		paint.setShadowLayer(4, 2, 5, Color.WHITE);
 
 		int size = 50;
-		int newX = 100;
-		int newY = 500;
 
-		float stopX = newX + size;
-		float stopY = (stopX - newX) + newY;
+		float newY = this.y + 15;
+		float stopX = x + size;
+		float stopY = (stopX - x) + newY;
 
-		canvas.drawLine(newX, newY, stopX, stopY, paint);
-		canvas.drawLine(newX, stopY, stopX, newY, paint);
+		canvas.drawLine(x, newY, stopX, stopY, paint);
+		canvas.drawLine(x, stopY, stopX, newY, paint);
 
 	}
 
@@ -190,4 +209,24 @@ public class Enemy extends GameCharacter {
 		canvas.drawCircle(this.x + 15, this.y + 40, 25, paint);
 	}
 
+	public void removeFigures(Map<ButtonName, Integer> buttonsPressed) {
+		for (Map.Entry<ButtonName, Integer> button : buttonsPressed.entrySet()) {
+			Iterator<ButtonName> iterator = this.controlButtonNames.iterator();
+			while (iterator.hasNext()) {
+				if (iterator.next().equals(button.getKey())) {
+					iterator.remove();
+					if (button.getValue() > 1) {
+						break;
+					}
+				}
+			}
+		}
+		if (this.controlButtonNames.isEmpty()) {
+			this.alive = false;
+		}
+	}
+
+	public boolean isAlive() {
+		return alive;
+	}
 }

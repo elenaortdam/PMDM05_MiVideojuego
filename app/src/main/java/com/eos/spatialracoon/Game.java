@@ -1,6 +1,10 @@
 package com.eos.spatialracoon;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.eos.spatialracoon.constants.ButtonName;
 import com.eos.spatialracoon.constants.CharacterName;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
@@ -25,34 +30,41 @@ import com.eos.spatialracoon.sprites.characters.GameCharacter;
 import com.eos.spatialracoon.sprites.characters.Raccoon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@SuppressLint("ViewConstructor")
 public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
 
 	private Bitmap bmp;
 	private final SurfaceHolder holder;
-	private GameLoop bucle;
+	private GameLoop gameLoop;
 	private final int[] availableBackgrounds = {R.drawable.bg1};
 	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
 	private final List<GameCharacter> characters = new ArrayList<>();
-	private final LevelSetting level;
+	private final LevelSetting levelSetting;
+	//TODO: elena cambiar por el gameState del flappyBirds?
+	private boolean lose = false;
+	private final HashMap<ButtonName, Integer> buttonsPressed = new HashMap<>();
+
+	//TODO: elena pasarlo a una clase
+	private int topScore;
+	private int score;
+	private final String SCORE = "SCORE";
 
 	private Bitmap background;
+	private final Raccoon raccoon;
 
 	private final int x = 0;
 	private final int y = 0;
 
-	private static final int rectInicialx = 450;
-	private static final int rectInicialy = 450;
-	private static final int arcoInicialx = 50;
-	private static final int arcoInicialy = 20;
-	private static final int textoInicialx = 50;
-	private static final int textoInicialy = 20;
-
 	private int contadorFrames = 0;
-	private final boolean hacia_abajo = true;
+	//TODO: elena ver cada cuanto salen los enemigos ¿por nivel?
+	private final int newEnemyFrames = 0; //frames que restan hasta generar nuevo enemigo
+
 	private static final String TAG = GameLoop.class.getSimpleName();
 	private int touchX, touchY;
 	List<Touch> touchs = new ArrayList<>();
@@ -65,25 +77,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		holder = getHolder();
 		holder.addCallback(this);
 
-//		gestureDetector = new GestureDetector(getContext(), new Gesture());
-//		this.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if (gestureDetector.onTouchEvent(event)) return false;
-//
-//				return false;
-//			}
-//		});
-		this.screen = Utilities.calculateScreenSize(activity);
+		//TODO: elena ver si funciona ok
+		this.screen = Utilities.calculateScreenSize(getContext());
 		loadBackground();
 		loadControlButtons();
-		GameCharacter racoon = new Raccoon(this.getContext());
-		characters.add(racoon);
+		this.raccoon = new Raccoon(this.getContext());
+		characters.add(this.raccoon);
 		setOnTouchListener(this);
 		Level level = new Level();
-		this.level = level.getLevelSettings(1);
+		this.levelSetting = level.getLevelSettings(1);
 		createEnemy();
-		System.out.println("Algo");
+
 	}
 
 	@Override
@@ -99,13 +103,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		getHolder().addCallback(this);
 
 		// creamos el game loop
-		bucle = new GameLoop(getHolder(), this);
+		gameLoop = new GameLoop(getHolder(), this);
 
 		// Hacer la Vista focusable para que pueda capturar eventos
 		setFocusable(true);
 
 		//comenzar el bucle
-		bucle.start();
+		gameLoop.start();
 
 	}
 
@@ -135,8 +139,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	}
 
 	public void createEnemy() {
-		for (int i = 0; i < level.getInitialEnemies(); i++) {
-			characters.add(new Enemy(this, level.getLevel()));
+		for (int i = 0; i < levelSetting.getInitialEnemies(); i++) {
+			characters.add(new Enemy(this, levelSetting.getLevel()));
 		}
 	}
 
@@ -146,8 +150,112 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	 */
 	public void update() {
 
+		if (lose) {
+			//TODO: elena probar si funciona
+			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
+			//TODO: elena probar si funciona
+			updateScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
+														  Context.MODE_PRIVATE));
+			getContext().startActivity(intent);
+		}
+
+		for (ControlButton button : this.buttons) {
+			if (button.isTouched()) {
+				Integer pressedQuantity =
+						this.buttonsPressed.getOrDefault(button, null);
+				if (pressedQuantity == null) {
+					this.buttonsPressed.put(button.getName(), 1);
+				} else {
+					this.buttonsPressed.put(button.getName(), pressedQuantity + 1);
+				}
+			}
+		}
+
+		for (GameCharacter character : characters) {
+			if (character.getName().equals(CharacterName.METEOROID)) {
+				Enemy enemy = (Enemy) character;
+//				enemy.moveEnemy(levelSetting);
+			}
+		}
+		//Eliminamos las figuras de los enemigos
+		killEnemies(this.buttonsPressed);
+
+		//TODO: elena createNewEnemies()
+		updateBackground();
+
+		levelUp();
+
+		//TODO: hacer lógica de gameOver
+		lose = gameOver(characters);
+
+		//TODO: elena comprobación de si tiene que aumentar de nivel
 //		createEnemy();
 		contadorFrames++;
+	}
+
+	public void createNewEnemy() {
+
+	}
+
+	public void levelUp() {
+/*
+//cada PUNTOS_CAMBIO_NIVEL puntos se incrementa la dificultad
+		if (Nivel != Puntos / PUNTOS_CAMBIO_NIVEL) {
+			Nivel = Puntos / PUNTOS_CAMBIO_NIVEL;
+			enemigos_minuto += (20 * Nivel);
+		}
+ */
+	}
+
+	public void updateScore(SharedPreferences prefs) {
+		topScore = prefs.getInt(SCORE, 0);
+		if (topScore < score) {
+			prefs.edit().putInt(SCORE, score).apply();
+			topScore = score;
+		}
+
+	}
+
+	public boolean gameOver(List<GameCharacter> characters) {
+
+		for (GameCharacter character : characters) {
+			if (character.getName().equals(CharacterName.METEOROID)) {
+				Enemy enemy = (Enemy) character;
+				int maxHeight = Math.max(enemy.getHeight(), raccoon.getHeight());
+				int maxWidth = Math.max(enemy.getWidth(), raccoon.getWidth());
+				float xDifference = Math.abs(enemy.getX() - raccoon.getX());
+				float yDifference = Math.abs(enemy.getY() - raccoon.getY());
+				return xDifference < maxWidth && yDifference < maxHeight;
+
+			}
+		}
+		return false;
+	}
+
+	private void updateBackground() {
+		//TODO: elena lógica mover planetas
+	}
+
+	private void killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
+		if (buttonsPressedByUser.isEmpty()) {
+			return;
+		}
+		List<Enemy> alive = new ArrayList<>();
+		List<Enemy> killed = new ArrayList<>();
+		for (GameCharacter character : characters) {
+			if (character.getName().equals(CharacterName.METEOROID)) {
+				Enemy enemy = (Enemy) character;
+				enemy.removeFigures(buttonsPressedByUser);
+				if (enemy.isAlive()) {
+					alive.add(enemy);
+				} else {
+					killed.add(enemy);
+				}
+			}
+		}
+		//TODO: elena poner una animación o algo para cada enemigo matado?
+		//TODO: sumar puntos por cada enemigo matado
+		this.characters.removeAll(killed);
 	}
 
 	/**
@@ -165,63 +273,35 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			for (GameCharacter character : characters) {
 				character.draw(canvas, myPaint);
 			}
-
-//			myPaint.setStyle(Paint.Style.STROKE);
-
-			//Toda el canvas en rojo
-//			canvas.drawColor(Color.RED);
-
-			//Dibujar muñeco de android
-//			bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background);
-//			canvas.drawBitmap(bmp, bmpInicialx + x, bmpInicialy + y, null);
-
-			//Cambiar color y tamaño de brocha
-//			myPaint.setStrokeWidth(10);
-//			myPaint.setColor(Color.BLUE);
-
-			//dibujar rectángulo de 300x300
-//			canvas.drawRect(rectInicialx + x, rectInicialy + y, 300, 300, myPaint);
-
-			//dibujar óvalo y arco
-//			RectF rectF = new RectF(arcoInicialx + x, arcoInicialy + y, 200, 120);
-//			canvas.drawOval(rectF, myPaint);
-//			myPaint.setColor(Color.BLACK);
-//			canvas.drawArc(rectF, 90, 45, true, myPaint);
-
-			//Si ha ocurrido un toque en la pantalla "Touch", dibujar un círculo
-			if (hasTouch) {
-				synchronized (this) {
-					for (Touch touch : touchs) {
-//						canvas.drawCircle(touch.getX(), touch.getY(),
-//										  100, myPaint);
-//						canvas.drawText(touch.getIndex() + "",
-//										touch.getX(), touch.getY(), myPaint);
-					}
-				}
-//				canvas.drawCircle(touchX, touchY, 20, myPaint);
-			}
-
-			//dibujar un texto
-//			myPaint.setStyle(Paint.Style.FILL);
-//			myPaint.setTextSize(40);
-//			canvas.drawText("Frames ejecutados:" + contadorFrames, textoInicialx, textoInicialy + y, myPaint);
-
 		}
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		/*
 		Log.d(TAG, "GameLoop destruido!");
 		// cerrar el thread y esperar que acabe
 		boolean retry = true;
 		while (retry) {
 			try {
-				//bucle.fin();
+				bucle.fin();
 				bucle.join();
 				retry = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+
+		 */
+		boolean retry = true;
+		while (retry) {
+			try {
+//				gameLoop.isRunning(false);
+				gameLoop.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			retry = false;
 		}
 	}
 
@@ -229,105 +309,39 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	public boolean onTouch(View v, MotionEvent event) {
 
 		int index;
-
 		float x, y;
-
 		index = event.getActionIndex();
-
-		x = event.getX();
-		y = event.getY();
 
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 			case MotionEvent.ACTION_POINTER_DOWN:
 				hasTouch = true;
-				x = (int) event.getX();
-				y = (int) event.getY();
+				x = event.getX();
+				y = event.getY();
 				synchronized (this) {
-					touchs.add(new Touch((int) x, (int) y, event.getActionIndex()));
+					touchs.add(index, new Touch(x, y, index));
+					for (ControlButton button : buttons) {
+						button.isTouched(x, y);
+					}
 				}
-				Log.i(Game.class.getSimpleName(), String.format("Pulsado dedo %s",
-																event.getActionIndex()));
+				Log.i(Game.class.getSimpleName(), "Pulsado dedo " + index + ".");
 				break;
-			case MotionEvent.ACTION_POINTER_UP:
-				synchronized (this) {
-					touchs.remove(index);
-					for (int i = 0; i < 3; i++)
-						buttons.get(i).checkButtonRelased(touchs);
-				}
-				break;
-			case MotionEvent.ACTION_UP:
-				synchronized (this) {
-					touchs.remove(event.getActionIndex());
-				}
-				Log.i(Game.class.getSimpleName(), String.format("Soltado dedo %s ultimo",
-																event.getActionIndex()));
-				hasTouch = false;
-				for (int i = 0; i < 3; i++)
-					buttons.get(i).checkButtonRelased(touchs);
-				break;
+//			case MotionEvent.ACTION_POINTER_UP:
+//				synchronized (this) {
+//					touchs.remove(index);
+//				}
+//				Log.i(Game.class.getSimpleName(), "Soltado dedo " + index + ".");
+//				break;
+//			case MotionEvent.ACTION_UP:
+//				synchronized (this) {
+//					touchs.remove(index);
+//				}
+//				Log.i(Game.class.getSimpleName(), "Soltado dedo " + index + ".ultimo.");
+//				hasTouch = false;
+//				break;
 		}
 		return true;
 	}
-
-	/*
-	private SurfaceHolder surfaceHolder;
-	private GameLoop gameLoop;
-	private int score;
-
-	public Game(Context context) {
-		super(context);
-//TODO: elena ¿poner sonidos de fondo?
-		surfaceHolder = getHolder();
-		surfaceHolder.addCallback(this);
-	}
-
-	private void startGame() {
-		//Posición 0 del personaje
-		//Cargar el sprite del marcador
-		//Enemigos que vayan apareciendo
-		//¿Nivel infinito? o ¿Dificultad del juego?
-		//  Si es el segundo hacer en la pantalla principal escoger nivel
-	}
-
-	@Override
-	public void surfaceCreated(@NonNull SurfaceHolder holder) {
-		getHolder().addCallback(this);
-		//Falta el getHolder() y el this
-		gameLoop = new GameLoop(holder, this);
-		setFocusable(true);
-		gameLoop.start();
-	}
-
-
-	public void update() {
-
-	}
-
-	public void render(Canvas canvas) {
-
-	}
-
-	@Override
-	public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-
-	}
-
-	@Override
-	public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-		Log.d(Game.class.getSimpleName(), "Game over");
-		//Cerrar el threar
-		boolean retry = true;
-		//TODO: elena revisar
-
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		return false;
-	}
-
-	 */
 
 	public List<GameCharacter> getCharacters(CharacterName name) {
 		return this.characters.stream()
@@ -335,14 +349,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 							  .filter(character -> character.getName() == name)
 							  .collect(Collectors.toList());
 
-	}
-
-	public int getScreenHeight() {
-		return this.screen.getHeight();
-	}
-
-	public int getScreenWidth() {
-		return this.screen.getWidth();
 	}
 
 }

@@ -2,8 +2,6 @@ package com.eos.spatialracoon;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -11,14 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameActivity extends AppCompatActivity {
 
-	private GestureDetector gestureDetector;
+//	private GestureDetector gestureDetector;
 
 	Game game;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		gestureDetector = new GestureDetector(this, new Gesture());
+//		gestureDetector = new GestureDetector(this, new Gesture());
 		game = new Game(this);
 		hideSystemUI();
 		setContentView(game);
@@ -60,11 +58,13 @@ public class GameActivity extends AppCompatActivity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
-
+/*
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		//return super.onTouchEvent(event);
 		return gestureDetector.onTouchEvent(event); //captura con detector de gestos
 	}
+
+ */
 
 }

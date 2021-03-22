@@ -12,7 +12,8 @@ import com.eos.spatialracoon.constants.ButtonName;
 
 import java.util.List;
 
-public abstract class ControlButton {
+//TODO: elena quitar el extends
+public abstract class ControlButton extends androidx.appcompat.widget.AppCompatImageView {
 
 	private float x;
 	private float y;
@@ -24,7 +25,8 @@ public abstract class ControlButton {
 	private final Screen screen;
 
 	public ControlButton(Context context) {
-		this.context = context;
+		super(context);
+		this.context = super.getContext();
 		this.screen = Utilities.calculateScreenSize(context);
 	}
 
@@ -38,14 +40,15 @@ public abstract class ControlButton {
 
 	}
 
-	public boolean isTouched(int x, int y) {
-		if (x > this.x && x < this.x + getWidth()
-				&& y > this.y && y < this.y + getHeight()) {
+	public boolean isTouched(float x, float y) {
+		if (x > this.x && x < this.x + getButtonWidth()
+				&& y > this.y && y < this.y + getButtonHeight()) {
 			touched = true;
 		}
 		return touched;
 	}
 
+	@Deprecated
 	public void checkButtonRelased(List<Touch> touchs) {
 		boolean aux = false;
 		for (Touch touch : touchs) {
@@ -80,11 +83,11 @@ public abstract class ControlButton {
 		this.y = y;
 	}
 
-	public int getWidth() {
+	public int getButtonWidth() {
 		return image.getWidth();
 	}
 
-	public int getHeight() {
+	public int getButtonHeight() {
 		return image.getHeight();
 	}
 
@@ -94,5 +97,13 @@ public abstract class ControlButton {
 
 	public Screen getScreen() {
 		return screen;
+	}
+
+	public boolean isTouched() {
+		return touched;
+	}
+
+	public ButtonName getName() {
+		return name;
 	}
 }

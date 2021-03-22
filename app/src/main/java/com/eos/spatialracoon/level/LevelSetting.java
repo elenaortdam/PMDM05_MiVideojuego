@@ -7,14 +7,16 @@ public class LevelSetting {
 	private final int maxEnemies;
 	private final int maxFigures;
 	private final int playerPoints;
+	private final int enemySpeed;
 
-	public LevelSetting(int level, int initialEnemies, int maxEnemies,
-						int maxFigures, int playerPoints) {
+	public LevelSetting(int level, int minEnemies, int maxEnemies,
+						int maxFigures, int playerPoints, int enemySpeed) {
 		this.level = level;
-		this.initialEnemies = initialEnemies;
+		this.initialEnemies = minEnemies;
 		this.maxEnemies = maxEnemies;
 		this.maxFigures = maxFigures;
 		this.playerPoints = playerPoints;
+		this.enemySpeed = enemySpeed;
 	}
 
 	public int getInitialEnemies() {
@@ -35,5 +37,9 @@ public class LevelSetting {
 
 	public int getLevel() {
 		return level;
+	}
+
+	public int getEnemySpeed() {
+		return enemySpeed;
 	}
 }

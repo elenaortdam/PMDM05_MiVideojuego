@@ -1,13 +1,10 @@
 package com.eos.spatialracoon;
 
-import android.util.Log;
-import android.view.MotionEvent;
-
-import static android.content.ContentValues.TAG;
-
 @Deprecated
-public class Gesture extends android.view.GestureDetector.SimpleOnGestureListener {
+public class Gesture {
 
+//		extends android.view.GestureDetector.SimpleOnGestureListener {
+/*
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 		Log.i(TAG, String.format("onSingleTapUp x: %s, y: %s", e.getX(), e.getY()));
@@ -43,4 +40,6 @@ public class Gesture extends android.view.GestureDetector.SimpleOnGestureListene
 		Log.i(TAG, "onDown");
 		return super.onDown(e);
 	}
+
+ */
 }

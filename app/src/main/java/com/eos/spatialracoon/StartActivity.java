@@ -14,18 +14,14 @@ public class StartActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_start);
 		View racoon = findViewById(R.id.mapache_nave);
 		//Button startButton = findViewById(R.id.start_button);
-		racoon.setOnClickListener(v -> {
-			this.startActivity(new Intent(this, GameActivity.class));
-		});
+		racoon.setOnClickListener(v -> this.startActivity(new Intent(this, GameActivity.class)));
 	}
 
 	//TODO: elena ocultar barra de arriba
-	//TODO: elena cargar letras tipo flapoy birds
-	//TODO: elena poner mapache
-	//TODO: elena poner el fondo
+	//TODO: elena cargar letras tipo flappy birds
 	//TODO: elena animación mapache
 	//TODO: elena record encima del mapache
 	//TODO: elena botón instrucciones
-	//TODO: elena texto "pulsa para comenzar"
+	//TODO: elena animación click
 
 }

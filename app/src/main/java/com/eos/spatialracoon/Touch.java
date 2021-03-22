@@ -2,29 +2,29 @@ package com.eos.spatialracoon;
 
 public class Touch {
 
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private int index;
 
-	public Touch(int x, int y, int index) {
+	public Touch(float x, float y, int index) {
 		this.x = x;
 		this.y = y;
 		this.index = index;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
