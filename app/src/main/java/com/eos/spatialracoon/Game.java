@@ -221,8 +221,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		for (GameCharacter character : characters) {
 			if (character.getName().equals(CharacterName.METEOROID)) {
 				Enemy enemy = (Enemy) character;
-				int maxHeight = Math.max(enemy.getHeight(), raccoon.getHeight());
-				int maxWidth = Math.max(enemy.getWidth(), raccoon.getWidth());
+				int maxHeight = Math.max(enemy.getImageHeight(), raccoon.getImageHeight());
+				int maxWidth = Math.max(enemy.getImageWidth(), raccoon.getImageWidth());
 				float xDifference = Math.abs(enemy.getX() - raccoon.getX());
 				float yDifference = Math.abs(enemy.getY() - raccoon.getY());
 				return xDifference < maxWidth && yDifference < maxHeight;
