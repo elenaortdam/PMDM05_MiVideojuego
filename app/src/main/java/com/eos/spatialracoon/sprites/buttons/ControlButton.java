@@ -12,8 +12,7 @@ import com.eos.spatialracoon.constants.ButtonName;
 
 import java.util.List;
 
-//TODO: elena quitar el extends
-public abstract class ControlButton extends androidx.appcompat.widget.AppCompatImageView {
+public abstract class ControlButton {
 
 	private float x;
 	private float y;
@@ -25,8 +24,7 @@ public abstract class ControlButton extends androidx.appcompat.widget.AppCompatI
 	private final Screen screen;
 
 	public ControlButton(Context context) {
-		super(context);
-		this.context = super.getContext();
+		this.context = context;
 		this.screen = Utilities.calculateScreenSize(context);
 	}
 
@@ -55,12 +53,6 @@ public abstract class ControlButton extends androidx.appcompat.widget.AppCompatI
 			if (isTouched(touch.getX(), touch.getY())) {
 				aux = true;
 			}
-//			if (touch.getX() > this.getX()
-//					&& touch.getX() < this.getX() + this.getY()
-//					&& touch.getX() > this.getY() &&
-//					touch.getY() < this.getY() + this.getHeight()) {
-//				aux = true;
-//			}
 		}
 		if (!aux) {
 			this.touched = false;
@@ -89,10 +81,6 @@ public abstract class ControlButton extends androidx.appcompat.widget.AppCompatI
 
 	public int getButtonHeight() {
 		return image.getHeight();
-	}
-
-	public Bitmap getImage() {
-		return image;
 	}
 
 	public Screen getScreen() {

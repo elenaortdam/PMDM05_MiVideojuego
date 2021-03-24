@@ -16,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.eos.spatialracoon.activities.GameOverActivity;
 import com.eos.spatialracoon.constants.ButtonName;
 import com.eos.spatialracoon.constants.CharacterName;
 import com.eos.spatialracoon.level.Level;
@@ -38,15 +39,15 @@ import java.util.stream.Collectors;
 @SuppressLint("ViewConstructor")
 public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
 
+	//TODO: elena final limpiar clase
 	private Bitmap bmp;
 	private final SurfaceHolder holder;
 	private GameLoop gameLoop;
-	private final int[] availableBackgrounds = {R.drawable.bg1};
+	private final int[] availableBackgrounds = {R.drawable.background};
 	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
 	private final List<GameCharacter> characters = new ArrayList<>();
 	private final LevelSetting levelSetting;
-	//TODO: elena cambiar por el gameState del flappyBirds?
 	private boolean lose = false;
 	private final HashMap<ButtonName, Integer> buttonsPressed = new HashMap<>();
 
@@ -62,7 +63,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final int y = 0;
 
 	private int contadorFrames = 0;
-	//TODO: elena ver cada cuanto salen los enemigos ¿por nivel?
+	//TODO: elena lógica nuevos enemigos -> iteracción menos que el máximo
 	private final int newEnemyFrames = 0; //frames que restan hasta generar nuevo enemigo
 
 	private static final String TAG = GameLoop.class.getSimpleName();
@@ -152,8 +153,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (lose) {
 			gameLoop.gameOver();
+			//TODO: elena musica morision
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
-			//TODO: elena probar si funciona
 			updateScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
 														  Context.MODE_PRIVATE));
 			getContext().startActivity(intent);
@@ -182,11 +183,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		killEnemies(this.buttonsPressed);
 
 		//TODO: elena createNewEnemies()
-		updateBackground();
 
 		levelUp();
 
-		//TODO: hacer lógica de gameOver
 		lose = gameOver(characters);
 
 		//TODO: elena comprobación de si tiene que aumentar de nivel
@@ -217,6 +216,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	}
 
+	//TODO: elena hacer bien la colisión con un círculo y una recta
 	public boolean gameOver(List<GameCharacter> characters) {
 
 		for (GameCharacter character : characters) {
@@ -230,10 +230,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			}
 		}
 		return false;
-	}
-
-	private void updateBackground() {
-		//TODO: elena lógica mover planetas
 	}
 
 	private void killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
@@ -266,6 +262,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			Paint myPaint = new Paint();
 			myPaint.setStyle(Paint.Style.STROKE);
 			myPaint.setColor(Color.WHITE);
+			//TODO: elena ver si por el -1 es por lo que sale hacia la izquierda
 			canvas.drawBitmap(backgroundImages[0], 0, -1, null);
 			for (ControlButton button : buttons) {
 				button.draw(canvas, myPaint);
@@ -278,21 +275,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		/*
-		Log.d(TAG, "GameLoop destruido!");
-		// cerrar el thread y esperar que acabe
-		boolean retry = true;
-		while (retry) {
-			try {
-				bucle.fin();
-				bucle.join();
-				retry = false;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 
-		 */
 		boolean retry = true;
 		while (retry) {
 			try {

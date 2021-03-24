@@ -4,13 +4,74 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".GameOverActivity">
+        tools:context=".activities.GameOverActivity"
+        android:background="@color/black">
+
+    <!--            android:textColor="#DAA520"-->
 
     <ImageView
+            android:layout_width="469dp"
+            android:layout_height="239dp"
+            app:srcCompat="@drawable/wasted_letters"
+            android:id="@+id/wasted_letters"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+            android:layout_width="368dp"
+            android:layout_height="272dp"
+            app:srcCompat="@drawable/wasted_raccoon"
+            android:id="@+id/wasted_raccoon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintBottom_toTopOf="@+id/retry"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+            android:text="@string/record_game_over"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/mapache_nave"
-            android:id="@+id/game_over"
-            tools:layout_editor_absoluteY="181dp"
-            tools:layout_editor_absoluteX="30dp" />
+            android:id="@+id/record"
+            android:textColor="@color/white"
+            android:fontFamily="@font/helvetica_bold"
+            android:textSize="35sp"
+            app:layout_constraintEnd_toEndOf="@+id/puntuacion"
+            app:layout_constraintStart_toStartOf="@+id/puntuacion"
+            app:layout_constraintTop_toTopOf="@+id/wasted_letters"
+            android:layout_marginTop="196dp" />
+
+    <TextView
+            android:text="@string/puntuacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/puntuacion"
+            android:textColor="@color/white"
+            android:fontFamily="@font/helvetica_bold"
+            android:textSize="35sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintTop_toTopOf="@+id/wasted_letters"
+            app:layout_constraintVertical_bias="0.424" />
+
+    <TextView
+            android:id="@+id/retry"
+            android:text="@string/retry_string"
+            android:textSize="35sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:fontFamily="@font/pac_font"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.936" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

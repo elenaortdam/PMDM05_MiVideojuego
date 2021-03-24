@@ -5,7 +5,7 @@
 
     <activity
             android:id="@+id/gameActivity"
-            android:name="com.eos.spatialracoon.GameActivity"
+            android:name="com.eos.spatialracoon.activities.GameActivity"
             android:label="activity_game"
             tools:layout="@layout/activity_game" />
 </navigation>

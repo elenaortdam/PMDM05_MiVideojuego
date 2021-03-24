@@ -35,11 +35,10 @@ public class Enemy extends GameCharacter {
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
 	private Bitmap image;
 
-	//TODO: elena ver si dependiendo de las coordenadas sale por la derecha o la izquierda
 	private final Screen screen;
 	private int points;
-	//TODO: elena poner la puntuación de cada enemigo
-	private int lifes;
+	//TODO: elena poner la puntuación de cada enemigo -> definir al crear el enemigo según el nivel o poner level
+	private int enemyPoints;
 
 	private final Game game;
 	private Context context;
@@ -66,15 +65,15 @@ public class Enemy extends GameCharacter {
 		setName(CharacterName.METEOROID);
 	}
 
+	//TODO: elena empezar siempre en x,0 para tener toda la pantalla por arriba
+	//TODO: elena poner quizá probabilidad para que salga de forma random por los bordes?
+	//TODO: elena final quitar logs
 	private Point getRandomBorderPoint(Screen screen) {
 		final float X = 0.5f;
 		final float MIN = 0.5f;
 		Point point = new Point();
 		int height = screen.getHeight() - super.getImageHeight();
 		int width = screen.getWidth() - super.getImageWidth();
-		//Que aparezcan solo por la parte de arriba de la pantalla
-		int quarterHeight = height / 4;
-		int quarterWidth = width / 4;
 		if (Math.random() <= X) {
 			if (Math.random() <= MIN) {
 				Log.d("CALCULO ENEMIGO", "1");
@@ -157,6 +156,7 @@ public class Enemy extends GameCharacter {
 		paint.setStrokeWidth(STROKE_WIDTH);
 		int size = 25;
 		Path path = new Path();
+		//TODO: elena con las nuevas figuras hacer más hacia arriba
 		//TODO: elena dependiendo de la cantidad de figuras desplazar más a la derecha
 		float triangleX = x + 35;
 		float triangleY = y + 35;

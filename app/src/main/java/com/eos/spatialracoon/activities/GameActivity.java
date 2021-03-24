@@ -1,4 +1,4 @@
-package com.eos.spatialracoon;
+package com.eos.spatialracoon.activities;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -7,28 +7,26 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class GameActivity extends AppCompatActivity {
+import com.eos.spatialracoon.Game;
 
-//	private GestureDetector gestureDetector;
+public class GameActivity extends AppCompatActivity {
 
 	Game game;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		gestureDetector = new GestureDetector(this, new Gesture());
 		game = new Game(this);
 		hideSystemUI();
 		setContentView(game);
 
 	}
 
-//	TODO:elena cargar fondo
-//	TODO:elena cargar fondo 2,3 para dar sensacion de movimiento
-//	TODO:elena cargar personaje principal
-//	TODO:elena cargar botones
-//	TODO:elena cargar asteroides random
-//	TODO:elena hacer la lógica
+// TODO: elena cargar fondo sin cosas (I)
+// TODO: elena musica al pulsar el botón
+//	TODO: elena musica de fondo (?)
+//	TODO: música al explotar enemigo
+//	TODO: animación explotar enemigo
 
 	private void hideSystemUI() {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
@@ -58,13 +56,7 @@ public class GameActivity extends AppCompatActivity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
-/*
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		//return super.onTouchEvent(event);
-		return gestureDetector.onTouchEvent(event); //captura con detector de gestos
-	}
 
- */
+	//TODO: elena FINAL refactor
 
 }

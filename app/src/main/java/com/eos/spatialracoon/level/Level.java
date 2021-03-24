@@ -9,6 +9,7 @@ public class Level {
 
 	private final HashMap<Integer, LevelSetting> levelSettings = createLevel();
 
+	//TODO: elena probar nuevos niveles
 	private HashMap<Integer, LevelSetting> createLevel() {
 		HashMap<Integer, LevelSetting> levelSettings = new HashMap<>();
 		levelSettings.put(1, new LevelSetting(1, 5, 10, 1,
