@@ -31,7 +31,7 @@ public class Enemy extends GameCharacter {
 
 	private final float speed;
 	private float x;
-	private final float y;
+	private float y;
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
 	private Bitmap image;
 
@@ -41,7 +41,7 @@ public class Enemy extends GameCharacter {
 	//TODO: elena poner la puntuación de cada enemigo
 	private int lifes;
 
-	private Game game;
+	private final Game game;
 	private Context context;
 	private final int level;
 	private boolean alive = true;
@@ -49,15 +49,12 @@ public class Enemy extends GameCharacter {
 	public Enemy(Game game, int level) {
 		super(game.getContext(), BitmapFactory.decodeResource(game.getContext().getResources(),
 															  R.drawable.meteroid),
-			  new Size(200, 200));
-
+			  new Size(150, 150));
+		this.game = game;
 		this.screen = super.getScreen();
 		Point point = getRandomBorderPoint(this.screen);
 		this.x = point.x;
 		this.y = point.y;
-		if (x <= x / 2) {
-			super.flipImage();
-		}
 		this.level = level;
 		Level levelSetting = new Level();
 		float ENEMY_SPEED = game.getHeight() / 20f / GameLoop.MAX_FPS;
@@ -76,20 +73,27 @@ public class Enemy extends GameCharacter {
 		int height = screen.getHeight() - super.getImageHeight();
 		int width = screen.getWidth() - super.getImageWidth();
 		//Que aparezcan solo por la parte de arriba de la pantalla
-		int middleScreen = height / 2;
+		int quarterHeight = height / 4;
+		int quarterWidth = width / 4;
 		if (Math.random() <= X) {
 			if (Math.random() <= MIN) {
-				point.set(0, generateRandom(0, middleScreen));
+				Log.d("CALCULO ENEMIGO", "1");
+				point.set(0, generateRandom(0, height / 4));
+//				point.set(0, generateRandom(0, quarterHeight));
 			} else {
-				point.set(width, generateRandom(0, middleScreen));
+				Log.d("CALCULO ENEMIGO", "2");
+				point.set(width, generateRandom(0, height / 4));
 			}
 		} else {
 			if (Math.random() <= MIN) {
-				point.set(generateRandom(0, width), 0);
+				Log.d("CALCULO ENEMIGO", "3");
+				point.set(generateRandom(0, width / 4), 0);
 			} else {
-				point.set(generateRandom(0, width), middleScreen);
+				Log.d("CALCULO ENEMIGO", "4");
+				point.set(generateRandom(0, width / 4), height / 4);
 			}
 		}
+		Log.d("POSICION ENEMIGO INICIAL", "(" + point.x + "," + point.y + ")");
 		return point;
 	}
 
@@ -110,29 +114,26 @@ public class Enemy extends GameCharacter {
 				  "No se ha encontrado al personaje principal");
 		}
 		GameCharacter raccoon = characters.get(0);
+		float proportion = Math.abs(raccoon.getX() - this.x) / Math.abs(raccoon.getY() - this.y);
+//		Log.d("PROPORTION", "(" + proportion + ")");
+
 		if (raccoon.getX() > this.x) {
-			this.x += levelSetting.getEnemySpeed();
+			this.x += levelSetting.getEnemySpeed() * proportion;
 		} else {
 			this.x -= levelSetting.getEnemySpeed();
 		}
-/*
+		if (raccoon.getY() > this.y) {
+			this.y += levelSetting.getEnemySpeed() / proportion;
+		} else {
+			this.y -= levelSetting.getEnemySpeed();
+		}
 
-
- if(Math.abs(coordenada_x-juego.xNave)<VELOCIDAD_ENEMIGO_INTELIGENTE)
- coordenada_x=juego.xNave; //si está muy cerca se pone a su altura
- if( coordenada_y>=juego.AltoPantalla-juego.enemigo_listo.getHeight()
- && direccion_vertical==1)
- direccion_vertical=-1;
- if(coordenada_y<=0 && direccion_vertical ==-1)
- direccion_vertical=1;
- coordenada_y+=direccion_vertical*VELOCIDAD_ENEMIGO_INTELIGENTE;
- */
+		Log.d("POSICION ENEMIGO", "(" + this.x + "," + this.y + ")");
 	}
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
-//		canvas.drawBitmap(super.getImage(), 500, 500, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
 			switch (controlButtonName) {
 				case X:
@@ -230,5 +231,19 @@ public class Enemy extends GameCharacter {
 
 	public boolean isAlive() {
 		return alive;
+	}
+
+	public List<ButtonName> getControlButtonNames() {
+		return controlButtonNames;
+	}
+
+	@Override
+	public float getX() {
+		return this.x;
+	}
+
+	@Override
+	public float getY() {
+		return this.y;
 	}
 }

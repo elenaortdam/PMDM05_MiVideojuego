@@ -77,11 +77,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		holder = getHolder();
 		holder.addCallback(this);
 
-		//TODO: elena ver si funciona ok
 		this.screen = Utilities.calculateScreenSize(getContext());
 		loadBackground();
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
+		Log.d("POSICION MAPACHE", "(" + raccoon.getX() + "," + raccoon.getY() + ")");
 		characters.add(this.raccoon);
 		setOnTouchListener(this);
 		Level level = new Level();
@@ -151,7 +151,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	public void update() {
 
 		if (lose) {
-			//TODO: elena probar si funciona
+			gameLoop.gameOver();
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
 			//TODO: elena probar si funciona
 			updateScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
@@ -160,9 +160,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 
 		for (ControlButton button : this.buttons) {
+			//TODO: elena test NPE
 			if (button.isTouched()) {
 				Integer pressedQuantity =
-						this.buttonsPressed.getOrDefault(button, null);
+						this.buttonsPressed.get(button);
 				if (pressedQuantity == null) {
 					this.buttonsPressed.put(button.getName(), 1);
 				} else {
@@ -174,7 +175,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		for (GameCharacter character : characters) {
 			if (character.getName().equals(CharacterName.METEOROID)) {
 				Enemy enemy = (Enemy) character;
-//				enemy.moveEnemy(levelSetting);
+				enemy.moveEnemy(levelSetting);
 			}
 		}
 		//Eliminamos las figuras de los enemigos
@@ -221,12 +222,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		for (GameCharacter character : characters) {
 			if (character.getName().equals(CharacterName.METEOROID)) {
 				Enemy enemy = (Enemy) character;
-				int maxHeight = Math.max(enemy.getImageHeight(), raccoon.getImageHeight());
-				int maxWidth = Math.max(enemy.getImageWidth(), raccoon.getImageWidth());
+				int maxHeight = Math.max(enemy.getImageWidth(), raccoon.getImageHeight());
+				int maxWidth = Math.max(enemy.getImageHeight(), raccoon.getImageWidth());
 				float xDifference = Math.abs(enemy.getX() - raccoon.getX());
 				float yDifference = Math.abs(enemy.getY() - raccoon.getY());
 				return xDifference < maxWidth && yDifference < maxHeight;
-
 			}
 		}
 		return false;
@@ -324,21 +324,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 						button.isTouched(x, y);
 					}
 				}
-				Log.i(Game.class.getSimpleName(), "Pulsado dedo " + index + ".");
 				break;
-//			case MotionEvent.ACTION_POINTER_UP:
-//				synchronized (this) {
-//					touchs.remove(index);
-//				}
-//				Log.i(Game.class.getSimpleName(), "Soltado dedo " + index + ".");
-//				break;
-//			case MotionEvent.ACTION_UP:
-//				synchronized (this) {
-//					touchs.remove(index);
-//				}
-//				Log.i(Game.class.getSimpleName(), "Soltado dedo " + index + ".ultimo.");
-//				hasTouch = false;
-//				break;
 		}
 		return true;
 	}
