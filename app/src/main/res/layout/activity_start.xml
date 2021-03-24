@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fondo_intro"
+        tools:context=".StartActivity">
+
+    <ImageView
+            android:layout_width="243dp"
+            android:layout_height="306dp"
+            android:id="@+id/mapache_nave"
+            android:src="@drawable/mapache_nave"
+            android:layout_alignParentStart="true"
+            tools:ignore="ContentDescription"
+            android:layout_marginStart="93dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="232dp"
+            android:layout_marginTop="192dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="75dp" />
+
+    <ImageView
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/letras"
+            android:src="@drawable/intro_letras"
+            tools:ignore="ContentDescription"
+            android:layout_marginStart="-56dp"
+            android:layout_alignStart="@+id/mapache_nave"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="123dp"
+            android:layout_marginTop="426dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp" />
+
+    <ImageView
+            android:layout_width="83dp"
+            android:layout_height="84dp"
+            app:srcCompat="@drawable/touch"
+            android:id="@+id/imageView"
+            android:layout_marginEnd="-56dp"
+            android:layout_alignEnd="@+id/mapache_nave"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="306dp" />
+
+    <TextView
+            android:text="@string/record"
+            android:layout_width="226dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:id="@+id/record"
+            android:textSize="35sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/pac_font"
+            android:layout_marginEnd="7dp"
+            android:layout_alignEnd="@+id/mapache_nave"
+            android:layout_marginStart="10dp"
+            android:layout_alignStart="@+id/mapache_nave"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="616dp" />
+
+</RelativeLayout>
