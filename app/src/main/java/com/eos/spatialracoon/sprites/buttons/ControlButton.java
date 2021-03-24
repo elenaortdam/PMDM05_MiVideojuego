@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.Touch;
 import com.eos.spatialracoon.Utilities;
-import com.eos.spatialracoon.constants.ButtonName;
+import com.eos.spatialracoon.enums.ButtonName;
 
 import java.util.List;
 

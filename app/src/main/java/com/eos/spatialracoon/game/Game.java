@@ -1,4 +1,4 @@
-package com.eos.spatialracoon;
+package com.eos.spatialracoon.game;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,9 +16,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.eos.spatialracoon.R;
+import com.eos.spatialracoon.Screen;
+import com.eos.spatialracoon.Touch;
+import com.eos.spatialracoon.Utilities;
 import com.eos.spatialracoon.activities.GameOverActivity;
-import com.eos.spatialracoon.constants.ButtonName;
-import com.eos.spatialracoon.constants.CharacterName;
+import com.eos.spatialracoon.enums.ButtonName;
+import com.eos.spatialracoon.enums.CharacterName;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
 import com.eos.spatialracoon.sprites.buttons.CircleButton;

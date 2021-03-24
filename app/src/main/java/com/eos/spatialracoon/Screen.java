@@ -7,8 +7,6 @@ public class Screen {
 	private final int width;
 	private final int height;
 
-	private Point point;
-
 	public Screen(Point point) {
 		this.width = point.x;
 		this.height = point.y;

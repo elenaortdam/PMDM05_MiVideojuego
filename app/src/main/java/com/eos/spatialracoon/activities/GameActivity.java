@@ -7,7 +7,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.eos.spatialracoon.Game;
+import com.eos.spatialracoon.game.Game;
 
 public class GameActivity extends AppCompatActivity {
 

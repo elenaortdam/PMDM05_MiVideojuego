@@ -1,4 +1,4 @@
-package com.eos.spatialracoon;
+package com.eos.spatialracoon.game;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
@@ -18,8 +18,6 @@ public class GameLoop extends Thread {
 		this.isRunning = false;
 	}
 
-	public static final String TAG = Game.class.getSimpleName();
-
 	GameLoop(SurfaceHolder sh, Game game) {
 		this.game = game;
 		this.surfaceHolder = sh;
@@ -34,8 +32,6 @@ public class GameLoop extends Thread {
 		long differenceTime;        // Tiempo que duró el ciclo
 		int sleepTime;        // Tiempo que el thread debe dormir (<0 si vamos mal de tiempo)
 		int skipFrames;    // número de frames saltados
-
-		sleepTime = 0;
 
 		while (isRunning) {
 			canvas = null;
@@ -59,7 +55,7 @@ public class GameLoop extends Thread {
 							// Enviar el thread a dormir
 							// Algo de batería ahorramos
 							Thread.sleep(sleepTime);
-						} catch (InterruptedException e) {
+						} catch (InterruptedException ignored) {
 						}
 					}
 

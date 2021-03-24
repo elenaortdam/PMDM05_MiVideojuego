@@ -34,10 +34,8 @@ public class Utilities {
 		int width = metrics.widthPixels;
 		int height = metrics.heightPixels;
 		Screen screen = new Screen(width, height);
-//		((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-		Log.i(Utilities.class.getSimpleName(), String.format("Pantalla: alto %d, ancho %d",
-															 screen.getWidth(), screen.getHeight()));
+//		Log.i(Utilities.class.getSimpleName(), String.format("Pantalla: alto %d, ancho %d",
+//															 screen.getWidth(), screen.getHeight()));
 
 		return screen;
 	}

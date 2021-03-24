@@ -11,12 +11,12 @@ import android.graphics.Point;
 import android.util.Log;
 import android.util.Size;
 
-import com.eos.spatialracoon.Game;
-import com.eos.spatialracoon.GameLoop;
 import com.eos.spatialracoon.R;
 import com.eos.spatialracoon.Screen;
-import com.eos.spatialracoon.constants.ButtonName;
-import com.eos.spatialracoon.constants.CharacterName;
+import com.eos.spatialracoon.enums.ButtonName;
+import com.eos.spatialracoon.enums.CharacterName;
+import com.eos.spatialracoon.game.Game;
+import com.eos.spatialracoon.game.GameLoop;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
 

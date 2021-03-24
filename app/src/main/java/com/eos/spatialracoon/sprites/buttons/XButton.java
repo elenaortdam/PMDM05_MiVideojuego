@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.ButtonName;
+import com.eos.spatialracoon.enums.ButtonName;
 
 public class XButton extends ControlButton {
 

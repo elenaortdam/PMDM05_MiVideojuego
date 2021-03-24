@@ -8,7 +8,7 @@ import android.util.Size;
 
 import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.Utilities;
-import com.eos.spatialracoon.constants.CharacterName;
+import com.eos.spatialracoon.enums.CharacterName;
 
 public abstract class GameCharacter {
 

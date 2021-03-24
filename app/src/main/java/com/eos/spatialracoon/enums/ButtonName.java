@@ -1,4 +1,4 @@
-package com.eos.spatialracoon.constants;
+package com.eos.spatialracoon.enums;
 
 public enum ButtonName {
 

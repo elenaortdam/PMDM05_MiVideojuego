@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.CharacterName;
+import com.eos.spatialracoon.enums.CharacterName;
 
 public class Raccoon extends GameCharacter {
 

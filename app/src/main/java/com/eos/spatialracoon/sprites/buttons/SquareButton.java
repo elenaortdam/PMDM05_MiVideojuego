@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.constants.ButtonName;
+import com.eos.spatialracoon.enums.ButtonName;
 
 public class SquareButton extends ControlButton {
 
