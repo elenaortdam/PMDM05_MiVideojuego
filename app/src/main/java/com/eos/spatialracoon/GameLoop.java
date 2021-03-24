@@ -30,12 +30,12 @@ public class GameLoop extends Thread {
 	public void run() {
 		Canvas canvas;
 
-		long tiempoComienzo;        // Tiempo en el que el ciclo comenzó
-		long tiempoDiferencia;        // Tiempo que duró el ciclo
-		int tiempoDormir;        // Tiempo que el thread debe dormir (<0 si vamos mal de tiempo)
-		int framesASaltar;    // número de frames saltados
+		long startTime;        // Tiempo en el que el ciclo comenzó
+		long differenceTime;        // Tiempo que duró el ciclo
+		int sleepTime;        // Tiempo que el thread debe dormir (<0 si vamos mal de tiempo)
+		int skipFrames;    // número de frames saltados
 
-		tiempoDormir = 0;
+		sleepTime = 0;
 
 		while (isRunning) {
 			canvas = null;
@@ -43,31 +43,31 @@ public class GameLoop extends Thread {
 			try {
 				canvas = this.surfaceHolder.lockCanvas();
 				synchronized (surfaceHolder) {
-					tiempoComienzo = System.currentTimeMillis();
-					framesASaltar = 0;    // resetear los frames saltados
+					startTime = System.currentTimeMillis();
+					skipFrames = 0;    // resetear los frames saltados
 					// Actualizar estado del juego
 					game.update();
 					// renderizar la imagen
 					game.render(canvas);
-					tiempoDiferencia = System.currentTimeMillis() - tiempoComienzo;
+					differenceTime = System.currentTimeMillis() - startTime;
 					// Calcular cuánto debe dormir el thread antes de la siguiente iteración
-					tiempoDormir = (int) (FRAME_TIME - tiempoDiferencia);
+					sleepTime = (int) (FRAME_TIME - differenceTime);
 
-					if (tiempoDormir > 0) {
+					if (sleepTime > 0) {
 						// si sleepTime > 0 vamos bien de tiempo
 						try {
 							// Enviar el thread a dormir
 							// Algo de batería ahorramos
-							Thread.sleep(tiempoDormir);
+							Thread.sleep(sleepTime);
 						} catch (InterruptedException e) {
 						}
 					}
 
-					while (tiempoDormir < 0 && framesASaltar < MAX_SKIPPED_FRAMES) {
+					while (sleepTime < 0 && skipFrames < MAX_SKIPPED_FRAMES) {
 						// Vamos mal de tiempo: Necesitamos ponernos al día
 						game.update(); // actualizar si rendering
-						tiempoDormir += FRAME_TIME;    // actualizar el tiempo de dormir
-						framesASaltar++;
+						sleepTime += FRAME_TIME;    // actualizar el tiempo de dormir
+						skipFrames++;
 					}
 
 				}
@@ -77,21 +77,6 @@ public class GameLoop extends Thread {
 					surfaceHolder.unlockCanvasAndPost(canvas);
 				}
 			}
-//			Log.d(TAG, "Nueva iteración!");
 		}
-		/*
-		Canvas canvas;
-		Log.d(TAG, "Comienza el juego");
-		while (isRunning) {
-			try {
-				synchronized (surfaceHolder) {
-
-				}
-			} catch (Exception e) {
-
-			}
-		}
-
-		 */
 	}
 }
