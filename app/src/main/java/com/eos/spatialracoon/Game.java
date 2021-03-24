@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -80,6 +81,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		loadBackground();
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
+		Log.d("POSICION MAPACHE", "(" + raccoon.getX() + "," + raccoon.getY() + ")");
 		characters.add(this.raccoon);
 		setOnTouchListener(this);
 		Level level = new Level();
@@ -149,7 +151,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	public void update() {
 
 		if (lose) {
-			//TODO: elena probar si funciona
+			gameLoop.gameOver();
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
 			//TODO: elena probar si funciona
 			updateScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
@@ -220,12 +222,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		for (GameCharacter character : characters) {
 			if (character.getName().equals(CharacterName.METEOROID)) {
 				Enemy enemy = (Enemy) character;
-				int maxHeight = Math.max(enemy.getImageHeight(), raccoon.getImageHeight());
-				int maxWidth = Math.max(enemy.getImageWidth(), raccoon.getImageWidth());
+				int maxHeight = Math.max(enemy.getImageWidth(), raccoon.getImageHeight());
+				int maxWidth = Math.max(enemy.getImageHeight(), raccoon.getImageWidth());
 				float xDifference = Math.abs(enemy.getX() - raccoon.getX());
 				float yDifference = Math.abs(enemy.getY() - raccoon.getY());
 				return xDifference < maxWidth && yDifference < maxHeight;
-
 			}
 		}
 		return false;

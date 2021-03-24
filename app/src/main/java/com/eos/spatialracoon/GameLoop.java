@@ -13,6 +13,11 @@ public class GameLoop extends Thread {
 	private final SurfaceHolder surfaceHolder;
 
 	public boolean isRunning = true;
+
+	public void gameOver() {
+		this.isRunning = false;
+	}
+
 	public static final String TAG = Game.class.getSimpleName();
 
 	GameLoop(SurfaceHolder sh, Game game) {
