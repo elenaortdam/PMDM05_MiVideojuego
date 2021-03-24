@@ -65,33 +65,40 @@ public class Enemy extends GameCharacter {
 		setName(CharacterName.METEOROID);
 	}
 
-	//TODO: elena empezar siempre en x,0 para tener toda la pantalla por arriba
 	//TODO: elena poner quizá probabilidad para que salga de forma random por los bordes?
 	//TODO: elena final quitar logs
 	private Point getRandomBorderPoint(Screen screen) {
+		Point point = new Point();
+		point.set(generateRandom(0, screen.getWidth()), 0);
+
 		final float X = 0.5f;
 		final float MIN = 0.5f;
-		Point point = new Point();
+
 		int height = screen.getHeight() - super.getImageHeight();
 		int width = screen.getWidth() - super.getImageWidth();
+		int fixedRate = 500;
+		int outScreen = -height / 4;
 		if (Math.random() <= X) {
-			if (Math.random() <= MIN) {
-				Log.d("CALCULO ENEMIGO", "1");
-				point.set(0, generateRandom(0, height / 4));
+			point.set(generateRandom(0, (int) (screen.getWidth() / 3.5f)), outScreen);
+//			if (Math.random() <= MIN) {
+//				Log.d("CALCULO ENEMIGO", "1");
+//				point.set(0, generateRandom(0, height / 4));
 //				point.set(0, generateRandom(0, quarterHeight));
-			} else {
-				Log.d("CALCULO ENEMIGO", "2");
-				point.set(width, generateRandom(0, height / 4));
-			}
+//			} else {
+//				Log.d("CALCULO ENEMIGO", "2");
+//				point.set(width, generateRandom(0, height / 4));
+//			}
 		} else {
-			if (Math.random() <= MIN) {
-				Log.d("CALCULO ENEMIGO", "3");
-				point.set(generateRandom(0, width / 4), 0);
-			} else {
-				Log.d("CALCULO ENEMIGO", "4");
-				point.set(generateRandom(0, width / 4), height / 4);
-			}
+			point.set(generateRandom((int) (screen.getWidth() / 2f), screen.getWidth()), outScreen);
+//			if (Math.random() <= MIN) {
+//				Log.d("CALCULO ENEMIGO", "3");
+//				point.set(generateRandom(0, width / 4), 0);
+//			} else {
+//				Log.d("CALCULO ENEMIGO", "4");
+//				point.set(generateRandom(0, width / 4), height / 4);
+//			}
 		}
+
 		Log.d("POSICION ENEMIGO INICIAL", "(" + point.x + "," + point.y + ")");
 		return point;
 	}
@@ -107,12 +114,12 @@ public class Enemy extends GameCharacter {
 	}
 
 	public void moveEnemy(LevelSetting levelSetting) {
-		List<GameCharacter> characters = game.getCharacters(CharacterName.RACCOON);
-		if (characters.isEmpty()) {
-			Log.e(getClass().getSimpleName(),
-				  "No se ha encontrado al personaje principal");
-		}
-		GameCharacter raccoon = characters.get(0);
+//		List<GameCharacter> characters = game.getCharacters(CharacterName.RACCOON);
+//		if (characters.isEmpty()) {
+//			Log.e(getClass().getSimpleName(),
+//				  "No se ha encontrado al personaje principal");
+//		}
+		GameCharacter raccoon = game.getRaccoon();
 		float proportion = Math.abs(raccoon.getX() - this.x) / Math.abs(raccoon.getY() - this.y);
 //		Log.d("PROPORTION", "(" + proportion + ")");
 
@@ -212,6 +219,7 @@ public class Enemy extends GameCharacter {
 		canvas.drawCircle(this.x + 15, this.y + 40, 25, paint);
 	}
 
+	//TODO: elena quitar los botones pulsados?
 	public void removeFigures(Map<ButtonName, Integer> buttonsPressed) {
 		for (Map.Entry<ButtonName, Integer> button : buttonsPressed.entrySet()) {
 			Iterator<ButtonName> iterator = this.controlButtonNames.iterator();
@@ -245,5 +253,9 @@ public class Enemy extends GameCharacter {
 	@Override
 	public float getY() {
 		return this.y;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 }

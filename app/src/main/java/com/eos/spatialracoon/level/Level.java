@@ -13,7 +13,7 @@ public class Level {
 	private HashMap<Integer, LevelSetting> createLevel() {
 		HashMap<Integer, LevelSetting> levelSettings = new HashMap<>();
 		levelSettings.put(1, new LevelSetting(1, 5, 10, 1,
-											  100, 5));
+											  100, 5, 2));
 		return levelSettings;
 	}
 

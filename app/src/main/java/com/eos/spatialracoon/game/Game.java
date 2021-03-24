@@ -50,9 +50,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final int[] availableBackgrounds = {R.drawable.background};
 	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
+	@Deprecated
 	private final List<GameCharacter> characters = new ArrayList<>();
+	private final List<GameCharacter> enemies = new ArrayList<>();
 	private final LevelSetting levelSetting;
-	private boolean lose = false;
+	private final boolean lose = false;
 	private final HashMap<ButtonName, Integer> buttonsPressed = new HashMap<>();
 
 	//TODO: elena pasarlo a una clase
@@ -66,9 +68,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final int x = 0;
 	private final int y = 0;
 
-	private int contadorFrames = 0;
 	//TODO: elena lógica nuevos enemigos -> iteracción menos que el máximo
-	private final int newEnemyFrames = 0; //frames que restan hasta generar nuevo enemigo
+	private int newEnemyFrames = 500; //frames que restan hasta generar nuevo enemigo
 
 	private static final String TAG = GameLoop.class.getSimpleName();
 	private int touchX, touchY;
@@ -87,11 +88,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
 		Log.d("POSICION MAPACHE", "(" + raccoon.getX() + "," + raccoon.getY() + ")");
-		characters.add(this.raccoon);
+//		characters.add(this.raccoon);
 		setOnTouchListener(this);
 		Level level = new Level();
 		this.levelSetting = level.getLevelSettings(1);
-		createEnemy();
+		for (int i = 0; i < levelSetting.getInitialEnemies(); i++) {
+			createEnemy();
+		}
 
 	}
 
@@ -144,9 +147,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	}
 
 	public void createEnemy() {
-		for (int i = 0; i < levelSetting.getInitialEnemies(); i++) {
-			characters.add(new Enemy(this, levelSetting.getLevel()));
-		}
+		enemies.add(new Enemy(this, levelSetting.getLevel()));
 	}
 
 	/**
@@ -165,7 +166,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 
 		for (ControlButton button : this.buttons) {
-			//TODO: elena test NPE
 			if (button.isTouched()) {
 				Integer pressedQuantity =
 						this.buttonsPressed.get(button);
@@ -177,28 +177,45 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			}
 		}
 
-		for (GameCharacter character : characters) {
-			if (character.getName().equals(CharacterName.METEOROID)) {
-				Enemy enemy = (Enemy) character;
-				enemy.moveEnemy(levelSetting);
-			}
+		for (GameCharacter character : enemies) {
+//			if (character.getName().equals(CharacterName.METEOROID)) {
+			Enemy enemy = (Enemy) character;
+			enemy.moveEnemy(levelSetting);
+//			}
 		}
 		//Eliminamos las figuras de los enemigos
-		killEnemies(this.buttonsPressed);
+		int enemiesKilled = killEnemies(this.buttonsPressed);
+		if (enemiesKilled > 0) {
+			createNewEnemies();
+		}
 
 		//TODO: elena createNewEnemies()
 
 		levelUp();
 
-		lose = gameOver(characters);
-
-		//TODO: elena comprobación de si tiene que aumentar de nivel
-//		createEnemy();
-		contadorFrames++;
+		//TODO: elena hacer bien la logica
+//		lose = gameOver(characters);
+		if (newEnemyFrames == 0) {
+			Log.d("CREATE NEW ENEMY", "Creando nuevo enemigo");
+			createNewEnemies();
+			//nuevo ciclo de enemigos
+			newEnemyFrames = GameLoop.MAX_FPS * 60 / levelSetting.getMaxNewEnemies();
+		}
+		newEnemyFrames--;
+		Log.d("NEW ENEMY FRAMES LEFT", String.valueOf(newEnemyFrames));
 	}
 
-	public void createNewEnemy() {
+	public void createNewEnemies() {
 
+		int maxEnemies = this.levelSetting.getMaxEnemies();
+		int actualEnemies = this.enemies.size();
+		if (actualEnemies < maxEnemies) {
+			int newEnemiesCreated = 0;
+			while (actualEnemies < maxEnemies && newEnemiesCreated < levelSetting.getMaxNewEnemies()) {
+				createEnemy();
+				newEnemiesCreated++;
+			}
+		}
 	}
 
 	public void levelUp() {
@@ -236,26 +253,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return false;
 	}
 
-	private void killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
+	private int killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
 		if (buttonsPressedByUser.isEmpty()) {
-			return;
+			return 0;
 		}
-		List<Enemy> alive = new ArrayList<>();
 		List<Enemy> killed = new ArrayList<>();
-		for (GameCharacter character : characters) {
-			if (character.getName().equals(CharacterName.METEOROID)) {
-				Enemy enemy = (Enemy) character;
-				enemy.removeFigures(buttonsPressedByUser);
-				if (enemy.isAlive()) {
-					alive.add(enemy);
-				} else {
-					killed.add(enemy);
-				}
+		for (GameCharacter character : enemies) {
+			Enemy enemy = (Enemy) character;
+			enemy.removeFigures(buttonsPressedByUser);
+			if (!enemy.isAlive()) {
+				killed.add(enemy);
 			}
 		}
 		//TODO: elena poner una animación o algo para cada enemigo matado?
 		//TODO: sumar puntos por cada enemigo matado
-		this.characters.removeAll(killed);
+		this.enemies.removeAll(killed);
+		return killed.size();
 	}
 
 	/**
@@ -263,20 +276,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	 */
 	public void render(Canvas canvas) {
 		if (canvas != null) {
-			Paint myPaint = new Paint();
-			myPaint.setStyle(Paint.Style.STROKE);
-			myPaint.setColor(Color.WHITE);
-			//TODO: elena ver si por el -1 es por lo que sale hacia la izquierda
+			Paint paint = new Paint();
+			paint.setStyle(Paint.Style.STROKE);
+			paint.setColor(Color.WHITE);
+			//TODO: elena ver como hacer para que ocupe toda la pantalla
 			canvas.drawBitmap(backgroundImages[0], 0, -1, null);
 			for (ControlButton button : buttons) {
-				button.draw(canvas, myPaint);
+				button.draw(canvas, paint);
 			}
-			for (GameCharacter character : characters) {
-				character.draw(canvas, myPaint);
+			for (GameCharacter enemy : enemies) {
+				enemy.draw(canvas, paint);
 			}
+			raccoon.draw(canvas, paint);
 		}
 	}
 
+	//TODO: liberar recursos al destruir
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 
@@ -316,12 +331,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return true;
 	}
 
+	//TODO: elena quitar todos los deprecated
+	@Deprecated
 	public List<GameCharacter> getCharacters(CharacterName name) {
 		return this.characters.stream()
 							  .filter(character -> character.getName() != null)
 							  .filter(character -> character.getName() == name)
 							  .collect(Collectors.toList());
 
+	}
+
+	public Raccoon getRaccoon() {
+		return this.raccoon;
 	}
 
 }
