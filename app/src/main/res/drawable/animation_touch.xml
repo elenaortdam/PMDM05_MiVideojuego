@@ -4,7 +4,4 @@
     <item
             android:drawable="@drawable/touch"
             android:duration="50" />
-    <item
-            android:drawable="@drawable/touch_1"
-            android:duration="50" />
 </animation-list>
