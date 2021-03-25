@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -43,7 +42,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private GameLoop gameLoop;
 	private final List<ControlButton> buttons = new ArrayList<>();
 	private final List<GameCharacter> enemies = new ArrayList<>();
-	private final LevelSetting levelSetting;
+	private LevelSetting levelSetting;
 	private final boolean lose = false;
 
 	//TODO: elena pasarlo a una clase (?)
@@ -68,10 +67,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		loadBackground();
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
-		Log.d("POSICION MAPACHE", "(" + raccoon.getX() + "," + raccoon.getY() + ")");
 		setOnTouchListener(this);
-		Level level = new Level();
-		this.levelSetting = level.getLevelSettings(1);
+		this.levelSetting = Level.getLevelSettings(1);
 		int DEFAULT_ENEMIES = 5;
 		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
@@ -126,6 +123,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		enemies.add(new Enemy(this, levelSetting.getLevel()));
 	}
 
+	//TODO: cada x tiempo mostrar un planeta o algo clickable que haga desaparecer todos los enemigos?
+
 	/**
 	 * Este método actualiza el estado del juego. Contiene la lógica del videojuego
 	 * generando los nuevos estados y dejando listo el sistema para un repintado.
@@ -179,9 +178,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 	}
 
-	//TODO: elena aumentar de nivel
 	public void levelUp() {
 
+		if (this.score >= levelSetting.getPlayerPoints()) {
+			int actualLevel = levelSetting.getLevel();
+			this.levelSetting = Level.getLevelSettings(actualLevel + 1);
+		}
 	}
 
 	public void updateScore(List<Enemy> killedEnemies) {
