@@ -19,7 +19,7 @@ public class StartActivity extends AppCompatActivity {
 		racoon.setOnClickListener(v -> this.startActivity(new Intent(this, GameActivity.class)));
 	}
 
-	//TODO: elena animación mapache
+	//TODO: elena animación mapache (?)
 	//TODO: elena record encima del mapache
 	//TODO: elena botón instrucciones
 	//TODO: elena animación click

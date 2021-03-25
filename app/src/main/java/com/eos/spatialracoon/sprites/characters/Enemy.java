@@ -22,7 +22,6 @@ import com.eos.spatialracoon.level.LevelSetting;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class Enemy extends GameCharacter {
 
@@ -63,8 +62,6 @@ public class Enemy extends GameCharacter {
 		setName(CharacterName.METEOROID);
 	}
 
-	//TODO: elena poner quizá probabilidad para que salga de forma random por los bordes?
-	//TODO: elena final quitar logs
 	private Point getRandomBorderPoint(Screen screen) {
 		Point point = new Point();
 		point.set(generateRandom(0, screen.getWidth()), 0);
@@ -78,26 +75,9 @@ public class Enemy extends GameCharacter {
 		int outScreen = -height / 4;
 		if (Math.random() <= X) {
 			point.set(generateRandom(0, (int) (screen.getWidth() / 3.5f)), outScreen);
-//			if (Math.random() <= MIN) {
-//				Log.d("CALCULO ENEMIGO", "1");
-//				point.set(0, generateRandom(0, height / 4));
-//				point.set(0, generateRandom(0, quarterHeight));
-//			} else {
-//				Log.d("CALCULO ENEMIGO", "2");
-//				point.set(width, generateRandom(0, height / 4));
-//			}
 		} else {
 			point.set(generateRandom((int) (screen.getWidth() / 2f), screen.getWidth()), outScreen);
-//			if (Math.random() <= MIN) {
-//				Log.d("CALCULO ENEMIGO", "3");
-//				point.set(generateRandom(0, width / 4), 0);
-//			} else {
-//				Log.d("CALCULO ENEMIGO", "4");
-//				point.set(generateRandom(0, width / 4), height / 4);
-//			}
 		}
-
-		Log.d("POSICION ENEMIGO INICIAL", "(" + point.x + "," + point.y + ")");
 		return point;
 	}
 
@@ -217,19 +197,16 @@ public class Enemy extends GameCharacter {
 		canvas.drawCircle(this.x + 15, this.y + 40, 25, paint);
 	}
 
-	//TODO: elena quitar los botones pulsados?
-	public void removeFigures(Map<ButtonName, Integer> buttonsPressed) {
-		for (Map.Entry<ButtonName, Integer> button : buttonsPressed.entrySet()) {
-			Iterator<ButtonName> iterator = this.controlButtonNames.iterator();
-			while (iterator.hasNext()) {
-				if (iterator.next().equals(button.getKey())) {
-					iterator.remove();
-					if (button.getValue() > 1) {
-						break;
-					}
-				}
+	public void removeFigures(ButtonName buttonName) {
+		Iterator<ButtonName> iterator = this.controlButtonNames.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.next().equals(buttonName)) {
+				iterator.remove();
+				//Solo quitamos 1 figura por botón pulsado
+				break;
 			}
 		}
+
 		if (this.controlButtonNames.isEmpty()) {
 			this.alive = false;
 		}

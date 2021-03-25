@@ -37,14 +37,13 @@ import com.eos.spatialracoon.sprites.characters.Raccoon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SuppressLint("ViewConstructor")
 public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
 
 	private final SurfaceHolder holder;
 	private GameLoop gameLoop;
-	//	TODO: elena solo dejar 1
+	//	TODO: elena solo dejar 1 (NEXT)
 	private final int[] availableBackgrounds = {R.drawable.background};
 	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
@@ -52,6 +51,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final LevelSetting levelSetting;
 	private final boolean lose = false;
 	private final HashMap<ButtonName, Integer> buttonsPressed = new HashMap<>();
+	private final List<ButtonName> buttonPressed = new ArrayList<>();
 
 	//TODO: elena pasarlo a una clase (?)
 	private int topScore;
@@ -147,31 +147,43 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (lose) {
 			gameLoop.gameOver();
-			//TODO: elena musica morision
+			//TODO: elena musica morision (?)
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
 			updateMaxScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
 															 Context.MODE_PRIVATE));
 			getContext().startActivity(intent);
 		}
 
-		for (ControlButton button : this.buttons) {
-			if (button.isTouched()) {
-				Integer pressedQuantity =
-						this.buttonsPressed.get(button);
-				if (pressedQuantity == null) {
-					this.buttonsPressed.put(button.getName(), 1);
-				} else {
-					this.buttonsPressed.put(button.getName(), pressedQuantity + 1);
-				}
-			}
-		}
+//		for (ControlButton button : this.buttons) {
+//			if (button.isTouched()) {
+//
+//				synchronized (this) {
+//					for (Touch touch : touchs) {
+//
+//					}
+//				}
+//			}
+//		}
+
+//		for (ControlButton button : this.buttons) {
+//			if (button.isTouched()) {
+//				Integer pressedQuantity =
+//						this.buttonsPressed.get(button);
+//				if (pressedQuantity == null) {
+//					this.buttonsPressed.put(button.getName(), 1);
+//				} else {
+//					this.buttonsPressed.put(button.getName(), pressedQuantity + 1);
+//				}
+//			}
+//		}
 
 		for (GameCharacter character : enemies) {
 			Enemy enemy = (Enemy) character;
 			enemy.moveEnemy(levelSetting);
 		}
 		//Eliminamos las figuras de los enemigos
-		List<Enemy> enemiesKilled = killEnemies(this.buttonsPressed);
+
+		List<Enemy> enemiesKilled = killEnemies();
 		if (enemiesKilled.size() > 0) {
 			createNewEnemies();
 		}
@@ -180,17 +192,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		levelUp();
 
-		//TODO: elena hacer bien la logica
 //		lose = gameOver(characters);
-		//TODO: probar a hacer nuevos enemigos solo con esto
+
 		if (newEnemyFrames == 0) {
-			Log.d("CREATE NEW ENEMY", "Creando nuevo enemigo");
+//			Log.d("CREATE NEW ENEMY", "Creando nuevo enemigo");
 			createNewEnemies();
 			//nuevo ciclo de enemigos
 			newEnemyFrames = GameLoop.MAX_FPS * 60 / levelSetting.getMaxNewEnemies();
 		}
 		newEnemyFrames--;
-		Log.d("NEW ENEMY FRAMES LEFT", String.valueOf(newEnemyFrames));
 	}
 
 	public void createNewEnemies() {
@@ -247,20 +257,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return false;
 	}
 
-	private List<Enemy> killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
-		if (buttonsPressedByUser.isEmpty()) {
-			return new ArrayList<>();
-		}
+	private List<Enemy> killEnemies() {
+
 		List<Enemy> killed = new ArrayList<>();
-		for (GameCharacter character : enemies) {
-			Enemy enemy = (Enemy) character;
-			enemy.removeFigures(buttonsPressedByUser);
-			if (!enemy.isAlive()) {
-				killed.add(enemy);
+		for (ControlButton button : buttons) {
+			if (button.isTouched()) {
+				for (GameCharacter character : enemies) {
+					Enemy enemy = (Enemy) character;
+					enemy.removeFigures(button.getName());
+					button.removeTouch();
+					if (!enemy.isAlive()) {
+						killed.add(enemy);
+					}
+				}
 			}
 		}
-		//TODO: elena poner una animación o algo para cada enemigo matado?
-		//TODO: sumar puntos por cada enemigo matado
+		//TODO: elena poner animación de explosión por cada enemigo matado
 		this.enemies.removeAll(killed);
 		return killed;
 	}

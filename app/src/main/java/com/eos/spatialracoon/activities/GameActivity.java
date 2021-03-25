@@ -22,11 +22,10 @@ public class GameActivity extends AppCompatActivity {
 
 	}
 
-// TODO: elena cargar fondo sin cosas (I)
+// TODO: elena cargar fondo sin cosas (NEXT)
 // TODO: elena musica al pulsar el botón
 //	TODO: elena musica de fondo (?)
 //	TODO: música al explotar enemigo
-//	TODO: animación explotar enemigo
 
 	private void hideSystemUI() {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {

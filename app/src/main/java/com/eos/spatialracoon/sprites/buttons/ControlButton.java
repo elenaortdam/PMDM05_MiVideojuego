@@ -91,6 +91,10 @@ public abstract class ControlButton {
 		return touched;
 	}
 
+	public void removeTouch() {
+		this.touched = false;
+	}
+
 	public ButtonName getName() {
 		return name;
 	}
