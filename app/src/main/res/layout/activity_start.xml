@@ -51,7 +51,7 @@
             android:layout_width="226dp"
             android:layout_height="50dp"
             android:gravity="center"
-            android:id="@+id/record"
+            android:id="@+id/record_string"
             android:textSize="35sp"
             android:textColor="@color/white"
             android:fontFamily="@font/pac_font"

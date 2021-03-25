@@ -46,8 +46,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final boolean lose = false;
 
 	//TODO: elena pasarlo a una clase (?)
-	private int topScore;
-	private int score;
+	private static int topScore;
+	private static int score;
 	private final String SCORE = "SCORE";
 
 	private Bitmap background;
@@ -57,6 +57,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	private final List<Touch> touchs = new ArrayList<>();
 	private final Screen screen;
+
+	private final SharedPreferences sharedPreferences;
 
 	public Game(Activity activity) {
 		super(activity);
@@ -73,6 +75,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
 		}
+		sharedPreferences = getContext().getSharedPreferences(getResources().getString(R.string.app_name),
+															  Context.MODE_PRIVATE);
 
 	}
 
@@ -131,12 +135,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	 */
 	public void update() {
 
-		if (lose) {
+//		if (lose) {
+		if (newEnemyFrames == 0) {
 			gameLoop.gameOver();
 			//TODO: elena musica morision (?)
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
-			updateMaxScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
-															 Context.MODE_PRIVATE));
+//			updateMaxScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
+//															 Context.MODE_PRIVATE));
+			//TODO: actualizar el score antes??
 			getContext().startActivity(intent);
 		}
 
@@ -180,7 +186,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	public void levelUp() {
 
-		if (this.score >= levelSetting.getPlayerPoints()) {
+		if (score >= levelSetting.getPlayerPoints()) {
 			int actualLevel = levelSetting.getLevel();
 			this.levelSetting = Level.getLevelSettings(actualLevel + 1);
 		}
@@ -188,18 +194,23 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	public void updateScore(List<Enemy> killedEnemies) {
 		for (Enemy enemy : killedEnemies) {
-			this.score += enemy.getEnemyPoints();
+			score += enemy.getEnemyPoints();
 		}
-	}
-
-	public void updateMaxScore(SharedPreferences prefs) {
-		topScore = prefs.getInt(SCORE, 0);
+		topScore = this.sharedPreferences.getInt(SCORE, 0);
 		if (topScore < score) {
-			prefs.edit().putInt(SCORE, score).apply();
+			this.sharedPreferences.edit().putInt(SCORE, score).apply();
 			topScore = score;
 		}
-
 	}
+
+//	public void updateMaxScore(SharedPreferences prefs) {
+//		topScore = prefs.getInt(SCORE, 0);
+//		if (topScore < score) {
+//			prefs.edit().putInt(SCORE, score).apply();
+//			topScore = score;
+//		}
+//
+//	}
 
 	//TODO: elena hacer bien la colisión con un círculo y una recta
 	public boolean gameOver(List<GameCharacter> characters) {
@@ -259,7 +270,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 //			paint.setTypeface(typeface);
 			paint.setTextSize((float) (this.screen.getWidth() / 30));
 			paint.setColor(Color.WHITE);
-			canvas.drawText("PUNTOS: " + this.score + " - Nivel " + levelSetting.getLevel(),
+			canvas.drawText("PUNTOS: " + score + " - Nivel " + levelSetting.getLevel(),
 							75, 75, paint);
 
 			raccoon.draw(canvas, paint);
@@ -312,4 +323,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return this.raccoon;
 	}
 
+	public static int getTopScore() {
+		return topScore;
+	}
+
+	public static int getScore() {
+		return score;
+	}
 }

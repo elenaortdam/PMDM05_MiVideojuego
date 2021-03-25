@@ -37,29 +37,57 @@
             android:text="@string/record_game_over"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/record"
+            android:id="@+id/record_string"
             android:textColor="@color/white"
-            android:fontFamily="@font/helvetica_bold"
+            android:fontFamily="@font/gta"
             android:textSize="35sp"
-            app:layout_constraintEnd_toEndOf="@+id/puntuacion"
-            app:layout_constraintStart_toStartOf="@+id/puntuacion"
+            app:layout_constraintEnd_toEndOf="@+id/puntuacion_string"
+            app:layout_constraintStart_toStartOf="@+id/puntuacion_string"
             app:layout_constraintTop_toTopOf="@+id/wasted_letters"
             android:layout_marginTop="196dp" />
+
+
+    <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/record"
+            android:textColor="@color/white"
+            android:fontFamily="@font/gta"
+            android:textSize="35sp"
+            app:layout_constraintEnd_toEndOf="@+id/puntuacion_string"
+            app:layout_constraintStart_toStartOf="@+id/puntuacion_string"
+            app:layout_constraintTop_toTopOf="@+id/wasted_letters"
+            android:layout_marginTop="236dp"
+            app:layout_constraintHorizontal_bias="0.507" />
 
     <TextView
             android:text="@string/puntuacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/puntuacion"
+            android:id="@+id/puntuacion_string"
             android:textColor="@color/white"
-            android:fontFamily="@font/helvetica_bold"
+            android:fontFamily="@font/gta"
             android:textSize="35sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintTop_toTopOf="@+id/wasted_letters"
             app:layout_constraintVertical_bias="0.424" />
+
+    <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/score"
+            android:textColor="@color/white"
+            android:fontFamily="@font/gta"
+            android:textSize="35sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/wasted_letters"
+            app:layout_constraintVertical_bias="0.484" />
 
     <TextView
             android:id="@+id/retry"
