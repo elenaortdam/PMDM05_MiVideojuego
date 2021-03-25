@@ -5,8 +5,8 @@ import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread {
 
-	public final static int MAX_FPS = 15;
-	public static final int MAX_SKIPPED_FRAMES = 5;
+	public final static int MAX_FPS = 20;
+	public static final int MAX_SKIPPED_FRAMES = 2;
 	public static final int FRAME_TIME = 1000 / MAX_FPS;
 
 	private final Game game;

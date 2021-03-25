@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.util.Log;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
@@ -54,7 +53,7 @@ public class Enemy extends GameCharacter {
 		Level levelSetting = new Level();
 		float ENEMY_SPEED = game.getHeight() / 20f / GameLoop.MAX_FPS;
 		speed = level * ENEMY_SPEED;
-		LevelSetting levelSettings = levelSetting.getLevelSettings(level);
+		LevelSetting levelSettings = Level.getLevelSettings(level);
 		for (int i = 0; i < levelSettings.getMaxFigures(); i++) {
 			this.controlButtonNames.add(getRandomFigure());
 		}
@@ -70,8 +69,6 @@ public class Enemy extends GameCharacter {
 		final float MIN = 0.5f;
 
 		int height = screen.getHeight() - super.getImageHeight();
-		int width = screen.getWidth() - super.getImageWidth();
-		int fixedRate = 500;
 		int outScreen = -height / 4;
 		if (Math.random() <= X) {
 			point.set(generateRandom(0, (int) (screen.getWidth() / 3.5f)), outScreen);
@@ -92,14 +89,9 @@ public class Enemy extends GameCharacter {
 	}
 
 	public void moveEnemy(LevelSetting levelSetting) {
-//		List<GameCharacter> characters = game.getCharacters(CharacterName.RACCOON);
-//		if (characters.isEmpty()) {
-//			Log.e(getClass().getSimpleName(),
-//				  "No se ha encontrado al personaje principal");
-//		}
+
 		GameCharacter raccoon = game.getRaccoon();
 		float proportion = Math.abs(raccoon.getX() - this.x) / Math.abs(raccoon.getY() - this.y);
-//		Log.d("PROPORTION", "(" + proportion + ")");
 
 		if (raccoon.getX() > this.x) {
 			this.x += levelSetting.getEnemySpeed() * proportion;
@@ -111,8 +103,7 @@ public class Enemy extends GameCharacter {
 		} else {
 			this.y -= levelSetting.getEnemySpeed();
 		}
-
-		Log.d("POSICION ENEMIGO", "(" + this.x + "," + this.y + ")");
+//		Log.d("POSICION ENEMIGO", "(" + this.x + "," + this.y + ")");
 	}
 
 	@Override
