@@ -1,7 +1,6 @@
 package com.eos.spatialracoon.sprites.characters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -33,14 +32,12 @@ public class Enemy extends GameCharacter {
 	private float x;
 	private float y;
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
-	private Bitmap image;
 
 	private final Screen screen;
-	private int points;
-	//TODO: elena poner la puntuación de cada enemigo -> definir al crear el enemigo según el nivel o poner level
-	private int enemyPoints;
+	private final int enemyPoints;
 
 	private final Game game;
+	@Deprecated
 	private Context context;
 	private final int level;
 	private boolean alive = true;
@@ -62,6 +59,7 @@ public class Enemy extends GameCharacter {
 		for (int i = 0; i < levelSettings.getMaxFigures(); i++) {
 			this.controlButtonNames.add(getRandomFigure());
 		}
+		this.enemyPoints = levelSettings.getKilledEnemiesPoint() * this.controlButtonNames.size();
 		setName(CharacterName.METEOROID);
 	}
 
@@ -257,5 +255,9 @@ public class Enemy extends GameCharacter {
 
 	public int getLevel() {
 		return level;
+	}
+
+	public int getEnemyPoints() {
+		return enemyPoints;
 	}
 }

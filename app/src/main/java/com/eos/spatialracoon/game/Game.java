@@ -38,26 +38,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @SuppressLint("ViewConstructor")
 public class Game extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener {
 
-	//TODO: elena final limpiar clase
-	private Bitmap bmp;
 	private final SurfaceHolder holder;
 	private GameLoop gameLoop;
+	//	TODO: elena solo dejar 1
 	private final int[] availableBackgrounds = {R.drawable.background};
 	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
-	@Deprecated
-	private final List<GameCharacter> characters = new ArrayList<>();
 	private final List<GameCharacter> enemies = new ArrayList<>();
 	private final LevelSetting levelSetting;
 	private final boolean lose = false;
 	private final HashMap<ButtonName, Integer> buttonsPressed = new HashMap<>();
 
-	//TODO: elena pasarlo a una clase
+	//TODO: elena pasarlo a una clase (?)
 	private int topScore;
 	private int score;
 	private final String SCORE = "SCORE";
@@ -65,17 +61,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private Bitmap background;
 	private final Raccoon raccoon;
 
-	private final int x = 0;
-	private final int y = 0;
-
-	//TODO: elena lógica nuevos enemigos -> iteracción menos que el máximo
 	private int newEnemyFrames = 500; //frames que restan hasta generar nuevo enemigo
 
-	private static final String TAG = GameLoop.class.getSimpleName();
-	private int touchX, touchY;
-	List<Touch> touchs = new ArrayList<>();
+	private final List<Touch> touchs = new ArrayList<>();
 	private boolean hasTouch;
-	//	private final GestureDetector gestureDetector;
 	private final Screen screen;
 
 	public Game(Activity activity) {
@@ -88,11 +77,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
 		Log.d("POSICION MAPACHE", "(" + raccoon.getX() + "," + raccoon.getY() + ")");
-//		characters.add(this.raccoon);
 		setOnTouchListener(this);
 		Level level = new Level();
 		this.levelSetting = level.getLevelSettings(1);
-		for (int i = 0; i < levelSetting.getInitialEnemies(); i++) {
+		int DEFAULT_ENEMIES = 5;
+		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
 		}
 
@@ -160,8 +149,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			gameLoop.gameOver();
 			//TODO: elena musica morision
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
-			updateScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
-														  Context.MODE_PRIVATE));
+			updateMaxScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
+															 Context.MODE_PRIVATE));
 			getContext().startActivity(intent);
 		}
 
@@ -178,18 +167,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 
 		for (GameCharacter character : enemies) {
-//			if (character.getName().equals(CharacterName.METEOROID)) {
 			Enemy enemy = (Enemy) character;
 			enemy.moveEnemy(levelSetting);
-//			}
 		}
 		//Eliminamos las figuras de los enemigos
-		int enemiesKilled = killEnemies(this.buttonsPressed);
-		if (enemiesKilled > 0) {
+		List<Enemy> enemiesKilled = killEnemies(this.buttonsPressed);
+		if (enemiesKilled.size() > 0) {
 			createNewEnemies();
 		}
 
-		//TODO: elena createNewEnemies()
+		updateScore(enemiesKilled);
 
 		levelUp();
 
@@ -229,7 +216,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
  */
 	}
 
-	public void updateScore(SharedPreferences prefs) {
+	public void updateScore(List<Enemy> killedEnemies) {
+		for (Enemy enemy : killedEnemies) {
+			this.score += enemy.getEnemyPoints();
+		}
+	}
+
+	public void updateMaxScore(SharedPreferences prefs) {
 		topScore = prefs.getInt(SCORE, 0);
 		if (topScore < score) {
 			prefs.edit().putInt(SCORE, score).apply();
@@ -254,9 +247,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return false;
 	}
 
-	private int killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
+	private List<Enemy> killEnemies(Map<ButtonName, Integer> buttonsPressedByUser) {
 		if (buttonsPressedByUser.isEmpty()) {
-			return 0;
+			return new ArrayList<>();
 		}
 		List<Enemy> killed = new ArrayList<>();
 		for (GameCharacter character : enemies) {
@@ -269,7 +262,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		//TODO: elena poner una animación o algo para cada enemigo matado?
 		//TODO: sumar puntos por cada enemigo matado
 		this.enemies.removeAll(killed);
-		return killed.size();
+		return killed;
 	}
 
 	/**
@@ -288,6 +281,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			for (GameCharacter enemy : enemies) {
 				enemy.draw(canvas, paint);
 			}
+			//TODO: elena cambiar la tipografía
+//			Typeface typeface = Typeface.createFromAsset(getContext().getResources(),
+//														 "font/helvetica_bold.ttf");
+//			paint.setTypeface(typeface);
+			paint.setTextSize((float) (this.screen.getWidth() / 30));
+			paint.setColor(Color.WHITE);
+			canvas.drawText("PUNTOS: " + this.score + " - Nivel " + levelSetting.getLevel(),
+							75, 75, paint);
+
 			raccoon.draw(canvas, paint);
 		}
 	}
@@ -333,14 +335,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	}
 
 	//TODO: elena quitar todos los deprecated
-	@Deprecated
-	public List<GameCharacter> getCharacters(CharacterName name) {
-		return this.characters.stream()
-							  .filter(character -> character.getName() != null)
-							  .filter(character -> character.getName() == name)
-							  .collect(Collectors.toList());
-
-	}
 
 	public Raccoon getRaccoon() {
 		return this.raccoon;
