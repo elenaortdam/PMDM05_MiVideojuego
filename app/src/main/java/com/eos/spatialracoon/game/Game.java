@@ -195,6 +195,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		//TODO: elena hacer bien la logica
 //		lose = gameOver(characters);
+		//TODO: probar a hacer nuevos enemigos solo con esto
 		if (newEnemyFrames == 0) {
 			Log.d("CREATE NEW ENEMY", "Creando nuevo enemigo");
 			createNewEnemies();
