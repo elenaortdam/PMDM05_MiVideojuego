@@ -21,7 +21,6 @@ import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.Touch;
 import com.eos.spatialracoon.Utilities;
 import com.eos.spatialracoon.activities.GameOverActivity;
-import com.eos.spatialracoon.enums.ButtonName;
 import com.eos.spatialracoon.enums.CharacterName;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
@@ -35,7 +34,6 @@ import com.eos.spatialracoon.sprites.characters.GameCharacter;
 import com.eos.spatialracoon.sprites.characters.Raccoon;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @SuppressLint("ViewConstructor")
@@ -43,15 +41,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	private final SurfaceHolder holder;
 	private GameLoop gameLoop;
-	//	TODO: elena solo dejar 1 (NEXT)
-	private final int[] availableBackgrounds = {R.drawable.background};
-	private final Bitmap[] backgroundImages = new Bitmap[availableBackgrounds.length];
 	private final List<ControlButton> buttons = new ArrayList<>();
 	private final List<GameCharacter> enemies = new ArrayList<>();
 	private final LevelSetting levelSetting;
 	private final boolean lose = false;
-	private final HashMap<ButtonName, Integer> buttonsPressed = new HashMap<>();
-	private final List<ButtonName> buttonPressed = new ArrayList<>();
 
 	//TODO: elena pasarlo a una clase (?)
 	private int topScore;
@@ -64,7 +57,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private int newEnemyFrames = 500; //frames que restan hasta generar nuevo enemigo
 
 	private final List<Touch> touchs = new ArrayList<>();
-	private boolean hasTouch;
 	private final Screen screen;
 
 	public Game(Activity activity) {
@@ -111,17 +103,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	}
 
 	public void loadBackground() {
-		//cargamos todos los fondos en un array
-		for (int i = 0; i < backgroundImages.length; i++) {
-			background = BitmapFactory.decodeResource(getResources(),
-													  availableBackgrounds[i]);
-			if (backgroundImages[i] == null)
-				backgroundImages[i] = Bitmap.createScaledBitmap(background,
-																screen.getWidth(),
-																screen.getHeight(),
-																true);
-			background.recycle();
-		}
+		background = BitmapFactory.decodeResource(getResources(),
+												  R.drawable.background);
+		this.background = Bitmap.createScaledBitmap(background,
+													screen.getWidth(),
+													screen.getHeight(),
+													false);
 	}
 
 	public void loadControlButtons() {
@@ -154,29 +141,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			getContext().startActivity(intent);
 		}
 
-//		for (ControlButton button : this.buttons) {
-//			if (button.isTouched()) {
-//
-//				synchronized (this) {
-//					for (Touch touch : touchs) {
-//
-//					}
-//				}
-//			}
-//		}
-
-//		for (ControlButton button : this.buttons) {
-//			if (button.isTouched()) {
-//				Integer pressedQuantity =
-//						this.buttonsPressed.get(button);
-//				if (pressedQuantity == null) {
-//					this.buttonsPressed.put(button.getName(), 1);
-//				} else {
-//					this.buttonsPressed.put(button.getName(), pressedQuantity + 1);
-//				}
-//			}
-//		}
-
 		for (GameCharacter character : enemies) {
 			Enemy enemy = (Enemy) character;
 			enemy.moveEnemy(levelSetting);
@@ -195,7 +159,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 //		lose = gameOver(characters);
 
 		if (newEnemyFrames == 0) {
-//			Log.d("CREATE NEW ENEMY", "Creando nuevo enemigo");
 			createNewEnemies();
 			//nuevo ciclo de enemigos
 			newEnemyFrames = GameLoop.MAX_FPS * 60 / levelSetting.getMaxNewEnemies();
@@ -216,14 +179,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 	}
 
+	//TODO: elena aumentar de nivel
 	public void levelUp() {
-/*
-//cada PUNTOS_CAMBIO_NIVEL puntos se incrementa la dificultad
-		if (Nivel != Puntos / PUNTOS_CAMBIO_NIVEL) {
-			Nivel = Puntos / PUNTOS_CAMBIO_NIVEL;
-			enemigos_minuto += (20 * Nivel);
-		}
- */
+
 	}
 
 	public void updateScore(List<Enemy> killedEnemies) {
@@ -286,7 +244,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setColor(Color.WHITE);
 			//TODO: elena ver como hacer para que ocupe toda la pantalla
-			canvas.drawBitmap(backgroundImages[0], 0, -1, null);
+			canvas.drawBitmap(background, 0, -1, null);
 			for (ControlButton button : buttons) {
 				button.draw(canvas, paint);
 			}
@@ -332,7 +290,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 			case MotionEvent.ACTION_POINTER_DOWN:
-				hasTouch = true;
+				boolean hasTouch = true;
 				x = event.getX();
 				y = event.getY();
 				synchronized (this) {
