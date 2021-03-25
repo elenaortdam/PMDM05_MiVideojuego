@@ -172,7 +172,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		int actualEnemies = this.enemies.size();
 		if (actualEnemies < maxEnemies) {
 			int newEnemiesCreated = 0;
-			while (actualEnemies < maxEnemies && newEnemiesCreated < levelSetting.getMaxNewEnemies()) {
+			while (newEnemiesCreated < levelSetting.getMaxNewEnemies()) {
 				createEnemy();
 				newEnemiesCreated++;
 			}
