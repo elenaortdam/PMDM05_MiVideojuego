@@ -13,13 +13,13 @@
             android:src="@drawable/mapache_nave"
             android:layout_alignParentStart="true"
             tools:ignore="ContentDescription"
-            android:layout_marginStart="93dp"
+            android:layout_marginStart="88dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="232dp"
-            android:layout_marginTop="192dp"
+            android:layout_marginBottom="179dp"
+            android:layout_marginTop="245dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="75dp" />
+            android:layout_marginEnd="80dp" />
 
     <ImageView
             android:layout_width="344dp"
@@ -27,14 +27,14 @@
             android:id="@+id/letras"
             android:src="@drawable/intro_letras"
             tools:ignore="ContentDescription"
-            android:layout_marginStart="-56dp"
+            android:layout_marginStart="-54dp"
             android:layout_alignStart="@+id/mapache_nave"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="123dp"
-            android:layout_marginTop="426dp"
+            android:layout_marginBottom="57dp"
+            android:layout_marginTop="492dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="30dp" />
+            android:layout_marginEnd="28dp" />
 
     <ImageView
             android:layout_width="83dp"
@@ -48,18 +48,34 @@
 
     <TextView
             android:text="@string/record"
+            android:layout_width="374dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/record_string"
+            android:textSize="50sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/gta"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="29dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="574dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true" />
+
+    <TextView
+            android:text=""
             android:layout_width="226dp"
             android:layout_height="50dp"
             android:gravity="center"
-            android:id="@+id/record_string"
+            android:id="@+id/record_start"
             android:textSize="35sp"
             android:textColor="@color/white"
-            android:fontFamily="@font/pac_font"
-            android:layout_marginEnd="7dp"
+            android:fontFamily="@font/gta"
+            android:layout_marginEnd="2dp"
             android:layout_alignEnd="@+id/mapache_nave"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="14dp"
             android:layout_alignStart="@+id/mapache_nave"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="616dp" />
+            android:layout_marginBottom="505dp" />
 
 </RelativeLayout>

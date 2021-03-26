@@ -30,7 +30,4 @@ public class GameOverActivity extends AppCompatActivity {
 	private void retry(View retry) {
 		retry.setOnClickListener(v -> this.startActivity(new Intent(this, GameActivity.class)));
 	}
-
-	//TODO: elena coger el marcador del usuario
-	//TODO: poner el record
 }

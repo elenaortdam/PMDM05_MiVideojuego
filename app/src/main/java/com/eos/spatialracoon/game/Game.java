@@ -71,6 +71,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		this.raccoon = new Raccoon(this.getContext());
 		setOnTouchListener(this);
 		this.levelSetting = Level.getLevelSettings(1);
+		score = 0;
 		int DEFAULT_ENEMIES = 5;
 		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
