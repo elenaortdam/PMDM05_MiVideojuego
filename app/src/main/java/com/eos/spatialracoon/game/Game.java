@@ -46,7 +46,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final List<GameCharacter> enemies = new ArrayList<>();
 	private LevelSetting levelSetting;
 	private boolean lose = false;
-	private boolean killSongPlayed = false;
 
 	//TODO: pasarlo a una clase (?)
 	private static int topScore;
@@ -64,6 +63,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final SharedPreferences sharedPreferences;
 
 	MediaPlayer mediaPlayer; //para reproducir la música de fondo
+	private boolean killSongPlayed = false;
 
 	public Game(Activity activity) {
 		super(activity);
@@ -78,14 +78,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		setOnTouchListener(this);
 		this.levelSetting = Level.getLevelSettings(1);
 		score = 0;
-		int DEFAULT_ENEMIES = 2;
-//		int DEFAULT_ENEMIES = 5;
+		int DEFAULT_ENEMIES = 5;
 		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
 		}
 		sharedPreferences = getContext().getSharedPreferences(getResources().getString(R.string.app_name),
 															  Context.MODE_PRIVATE);
+		playBackgroundMusic();
+		killSongPlayed = false;
+	}
 
+	private void playBackgroundMusic() {
+		mediaPlayer = MediaPlayer.create(getContext(), R.raw.epic_music);
+		mediaPlayer.setOnCompletionListener(MediaPlayer::start);
+		mediaPlayer.start();
+		mediaPlayer.setLooping(true);
 	}
 
 	@Override
@@ -145,6 +152,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (lose) {
 			gameLoop.gameOver();
+			this.mediaPlayer.stop();
 			killMusic();
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
 			getContext().startActivity(intent);
@@ -293,6 +301,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	}
 
 	private void killMusic() {
+//		mediaPlayer = new MediaPlayer();
 		mediaPlayer = MediaPlayer.create(getContext(), R.raw.quack);
 		if (!killSongPlayed) {
 			mediaPlayer.setLooping(false);
