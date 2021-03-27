@@ -136,8 +136,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	 */
 	public void update() {
 
-//		if (lose) {
-		if (newEnemyFrames == 0) {
+		if (lose) {
 			gameLoop.gameOver();
 			//TODO: elena musica morision (?)
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);

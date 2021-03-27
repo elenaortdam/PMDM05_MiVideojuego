@@ -42,7 +42,7 @@ public class Enemy extends GameCharacter {
 
 	public Enemy(Game game, int level) {
 		super(game.getContext(), BitmapFactory.decodeResource(game.getContext().getResources(),
-															  R.drawable.meteroid),
+															  R.drawable.asteroid),
 			  new Size(150, 150));
 		this.game = game;
 		this.screen = super.getScreen();
