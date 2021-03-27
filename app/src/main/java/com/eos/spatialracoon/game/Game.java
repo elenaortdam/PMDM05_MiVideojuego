@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,7 +22,6 @@ import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.Touch;
 import com.eos.spatialracoon.Utilities;
 import com.eos.spatialracoon.activities.GameOverActivity;
-import com.eos.spatialracoon.enums.CharacterName;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
 import com.eos.spatialracoon.sprites.buttons.CircleButton;
@@ -43,7 +44,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final List<ControlButton> buttons = new ArrayList<>();
 	private final List<GameCharacter> enemies = new ArrayList<>();
 	private LevelSetting levelSetting;
-	private final boolean lose = false;
+	private boolean lose = false;
 
 	//TODO: elena pasarlo a una clase (?)
 	private static int topScore;
@@ -69,10 +70,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		loadBackground();
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
+		Log.d("Posicion mapache", "(" + raccoon.getX() + ", " + raccoon.getY() + ")");
 		setOnTouchListener(this);
 		this.levelSetting = Level.getLevelSettings(1);
 		score = 0;
-		int DEFAULT_ENEMIES = 5;
+		int DEFAULT_ENEMIES = 1;
+//		int DEFAULT_ENEMIES = 5;
 		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
 		}
@@ -161,7 +164,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		levelUp();
 
-//		lose = gameOver(characters);
+		lose = gameOver();
 
 		if (newEnemyFrames == 0) {
 			createNewEnemies();
@@ -213,17 +216,43 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 //	}
 
 	//TODO: elena hacer bien la colisión con un círculo y una recta
-	public boolean gameOver(List<GameCharacter> characters) {
+	public boolean gameOver() {
 
-		for (GameCharacter character : characters) {
-			if (character.getName().equals(CharacterName.METEOROID)) {
-				Enemy enemy = (Enemy) character;
-				int maxHeight = Math.max(enemy.getImageWidth(), raccoon.getImageHeight());
-				int maxWidth = Math.max(enemy.getImageHeight(), raccoon.getImageWidth());
-				float xDifference = Math.abs(enemy.getX() - raccoon.getX());
-				float yDifference = Math.abs(enemy.getY() - raccoon.getY());
-				return xDifference < maxWidth && yDifference < maxHeight;
+		Rect raccoonCollision = raccoon.getCollision();
+		for (GameCharacter character : enemies) {
+			Enemy enemy = (Enemy) character;
+
+			// temporary variables to set edges for testing
+			float testX = enemy.getX();
+			float testY = enemy.getY();
+
+			//Vemos cual está más cerca
+			if (enemy.getX() < raccoon.getX()) { //izquierda
+				testX = raccoon.getX();
 			}
+			if (enemy.getX() > raccoon.getX() + raccoon.getImageWidth()) {
+				testX = raccoon.getX() + raccoon.getImageWidth(); //derecha
+			}
+			if (enemy.getY() < raccoon.getY()) { //arriba
+				testY = raccoon.getY();
+			}
+			if (enemy.getY() > raccoon.getX() + raccoon.getImageHeight()) { //abajo
+				testY = raccoon.getX() + raccoon.getImageHeight();
+			}
+
+			// cogemos la distancia de los extremos más cercanos
+			float distX = enemy.getX() - testX;
+			float distY = enemy.getY() - testY;
+			double distance = Math.sqrt((distX * distX) + (distY * distY));
+
+			// Si la distancia es menor que el radio hay colisión
+			boolean test = distance <= enemy.getImageHeight() / 2f;
+
+			if (test) {
+				Log.wtf("Colisión en: ", "(" + enemy.getX() + ", " + enemy.getY() + ")");
+				Log.wtf("COLLISION", "Catapum bum bum");
+			}
+			return false;
 		}
 		return false;
 	}

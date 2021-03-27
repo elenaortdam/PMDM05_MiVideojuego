@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.Log;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
@@ -98,6 +99,7 @@ public class Enemy extends GameCharacter {
 		} else {
 			this.y -= levelSetting.getEnemySpeed();
 		}
+		Log.d("Posicion enemigo", "(" + x + ", " + y + ")");
 	}
 
 	@Override
