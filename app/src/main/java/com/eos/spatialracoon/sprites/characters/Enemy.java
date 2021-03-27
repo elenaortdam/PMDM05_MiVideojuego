@@ -103,6 +103,9 @@ public class Enemy extends GameCharacter {
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
+		paint.setColor(Color.WHITE);
+		canvas.drawCircle(this.x + super.getImageWidth() / 2f, this.y + super.getImageHeight() / 2f,
+						  super.getImageWidth() / 2f, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
 			switch (controlButtonName) {
 				case X:

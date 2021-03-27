@@ -34,7 +34,6 @@ public abstract class GameCharacter {
 		this(context);
 		this.image = Bitmap.createScaledBitmap(image, size.getWidth(), size.getHeight(),
 											   false);
-//		this.image = image;
 	}
 
 	public abstract void draw(Canvas canvas, Paint paint);
