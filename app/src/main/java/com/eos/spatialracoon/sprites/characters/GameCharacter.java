@@ -12,7 +12,6 @@ import com.eos.spatialracoon.enums.CharacterName;
 
 public abstract class GameCharacter {
 
-	//	private int lifes;
 	private Bitmap image;
 	private final Context context;
 	private final Screen screen;
@@ -25,6 +24,7 @@ public abstract class GameCharacter {
 		this.screen = Utilities.calculateScreenSize(context);
 	}
 
+	@Deprecated
 	public GameCharacter(Context context, Bitmap image) {
 		this(context);
 		this.image = image;

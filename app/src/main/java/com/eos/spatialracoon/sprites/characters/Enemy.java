@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.Log;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
@@ -14,7 +15,6 @@ import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.enums.ButtonName;
 import com.eos.spatialracoon.enums.CharacterName;
 import com.eos.spatialracoon.game.Game;
-import com.eos.spatialracoon.game.GameLoop;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
 
@@ -26,7 +26,6 @@ public class Enemy extends GameCharacter {
 
 	private final int STROKE_WIDTH = 8;
 
-	private final float speed;
 	private float x;
 	private float y;
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
@@ -41,18 +40,16 @@ public class Enemy extends GameCharacter {
 	private boolean alive = true;
 
 	public Enemy(Game game, int level) {
-		super(game.getContext(), BitmapFactory.decodeResource(game.getContext().getResources(),
-															  R.drawable.meteroid),
-			  new Size(150, 150));
+		super(game.getContext(),
+			  BitmapFactory.decodeResource(game.getContext().getResources(),
+										   R.drawable.asteroid),
+			  new Size(100, 100));
 		this.game = game;
 		this.screen = super.getScreen();
 		Point point = getRandomBorderPoint(this.screen);
 		this.x = point.x;
 		this.y = point.y;
 		this.level = level;
-		Level levelSetting = new Level();
-		float ENEMY_SPEED = game.getHeight() / 20f / GameLoop.MAX_FPS;
-		speed = level * ENEMY_SPEED;
 		LevelSetting levelSettings = Level.getLevelSettings(level);
 		for (int i = 0; i < levelSettings.getMaxFigures(); i++) {
 			this.controlButtonNames.add(getRandomFigure());
@@ -66,7 +63,6 @@ public class Enemy extends GameCharacter {
 		point.set(generateRandom(0, screen.getWidth()), 0);
 
 		final float X = 0.5f;
-		final float MIN = 0.5f;
 
 		int height = screen.getHeight() - super.getImageHeight();
 		int outScreen = -height / 4;
@@ -103,12 +99,15 @@ public class Enemy extends GameCharacter {
 		} else {
 			this.y -= levelSetting.getEnemySpeed();
 		}
-//		Log.d("POSICION ENEMIGO", "(" + this.x + "," + this.y + ")");
+		Log.d("Posicion enemigo", "(" + x + ", " + y + ")");
 	}
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
+		paint.setColor(Color.WHITE);
+//		canvas.drawCircle(this.x + super.getImageWidth() / 2f, this.y + super.getImageHeight() / 2f,
+//						  super.getImageWidth() / 2f, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
 			switch (controlButtonName) {
 				case X:
@@ -136,10 +135,10 @@ public class Enemy extends GameCharacter {
 		//TODO: elena dependiendo de la cantidad de figuras desplazar más a la derecha
 		float triangleX = x + 35;
 		float triangleY = y + 35;
-		path.moveTo(triangleX, triangleY - size); // Top
-		path.lineTo(triangleX - size, triangleY + size); // Bottom left
-		path.lineTo(triangleX + size, triangleY + size); // Bottom right
-		path.lineTo(triangleX, triangleY - size); // Back to Top
+		path.moveTo(triangleX, triangleY - size); // arriba
+		path.lineTo(triangleX - size, triangleY + size); // abajo izquierda
+		path.lineTo(triangleX + size, triangleY + size); // abajo derecha
+		path.lineTo(triangleX, triangleY - size); // Cerrar el triángulo
 		path.close();
 
 		canvas.drawPath(path, paint);
@@ -149,20 +148,11 @@ public class Enemy extends GameCharacter {
 	private void drawSquare(Canvas canvas, Paint paint) {
 		paint.setColor(Color.parseColor("#ff69f8"));
 		paint.setStrokeWidth(STROKE_WIDTH);
-		int halfWidth = 30;
-
-		float xSquare = x;
-		float ySquare = y;
-		Path path = new Path();
-
-		path.moveTo(xSquare, ySquare + halfWidth);
-		path.lineTo(xSquare, ySquare - halfWidth);
-		path.lineTo(xSquare + (halfWidth * 2), ySquare - halfWidth);
-		path.lineTo(xSquare + (halfWidth * 2), ySquare + halfWidth);
-		path.lineTo(xSquare, ySquare + halfWidth);
-
-		path.close();
-		canvas.drawPath(path, paint);
+		int size = 20;
+		float x = this.x + getImageWidth() / 2f;
+		float y = this.y - getImageHeight() / 2f + 10;
+		canvas.drawRect(x - size, y - size,
+						x + size, y + size, paint);
 	}
 
 	private void drawX(Canvas canvas, Paint paint) {
