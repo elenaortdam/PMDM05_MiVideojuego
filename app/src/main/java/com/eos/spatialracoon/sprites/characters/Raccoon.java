@@ -27,12 +27,11 @@ public class Raccoon extends GameCharacter {
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
-
-		canvas.drawBitmap(super.getImage(), super.getX() - middleImageWidth, super.getY() - middleImageHeight, paint);
-		float cx = super.getScreen().getWidth() / 2f;
-		float cy = super.getScreen().getHeight() / 2f;
-		canvas.drawRect(cx - (float) super.getImageWidth() / 2, cy - (float) super.getImageHeight() / 2,
-						cx + (float) super.getImageWidth() / 2, cy + (float) super.getImageHeight() / 2, paint);
+		canvas.drawBitmap(super.getImage(),
+						  super.getX() - middleImageWidth,
+						  super.getY() - middleImageHeight, paint);
+		canvas.drawRect(super.getX() - middleImageWidth, super.getY() - middleImageHeight,
+						super.getX() + middleImageWidth, super.getY() + middleImageHeight, paint);
 	}
 
 }
