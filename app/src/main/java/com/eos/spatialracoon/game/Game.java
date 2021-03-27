@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -45,6 +46,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final List<GameCharacter> enemies = new ArrayList<>();
 	private LevelSetting levelSetting;
 	private boolean lose = false;
+	private boolean killSongPlayed = false;
 
 	//TODO: pasarlo a una clase (?)
 	private static int topScore;
@@ -60,6 +62,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final Screen screen;
 
 	private final SharedPreferences sharedPreferences;
+
+	MediaPlayer mediaPlayer; //para reproducir la música de fondo
 
 	public Game(Activity activity) {
 		super(activity);
@@ -141,7 +145,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (lose) {
 			gameLoop.gameOver();
-			//TODO:  musica morision (?)
+			killMusic();
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
 			getContext().startActivity(intent);
 		}
@@ -202,15 +206,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			topScore = score;
 		}
 	}
-
-//	public void updateMaxScore(SharedPreferences prefs) {
-//		topScore = prefs.getInt(SCORE, 0);
-//		if (topScore < score) {
-//			prefs.edit().putInt(SCORE, score).apply();
-//			topScore = score;
-//		}
-//
-//	}
 
 	public boolean gameOver() {
 
@@ -294,6 +289,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 							75, 75, paint);
 
 			raccoon.draw(canvas, paint);
+		}
+	}
+
+	private void killMusic() {
+		mediaPlayer = MediaPlayer.create(getContext(), R.raw.quack);
+		if (!killSongPlayed) {
+			mediaPlayer.setLooping(false);
+			mediaPlayer.start();
+			killSongPlayed = true;
 		}
 	}
 
