@@ -14,7 +14,6 @@ import com.eos.spatialracoon.Screen;
 import com.eos.spatialracoon.enums.ButtonName;
 import com.eos.spatialracoon.enums.CharacterName;
 import com.eos.spatialracoon.game.Game;
-import com.eos.spatialracoon.game.GameLoop;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
 
@@ -43,15 +42,13 @@ public class Enemy extends GameCharacter {
 		super(game.getContext(),
 			  BitmapFactory.decodeResource(game.getContext().getResources(),
 										   R.drawable.asteroid),
-			  new Size(150, 150));
+			  new Size(100, 100));
 		this.game = game;
 		this.screen = super.getScreen();
 		Point point = getRandomBorderPoint(this.screen);
 		this.x = point.x;
 		this.y = point.y;
 		this.level = level;
-		Level levelSetting = new Level();
-		float ENEMY_SPEED = game.getHeight() / 20f / GameLoop.MAX_FPS;
 		LevelSetting levelSettings = Level.getLevelSettings(level);
 		for (int i = 0; i < levelSettings.getMaxFigures(); i++) {
 			this.controlButtonNames.add(getRandomFigure());
@@ -101,7 +98,6 @@ public class Enemy extends GameCharacter {
 		} else {
 			this.y -= levelSetting.getEnemySpeed();
 		}
-//		Log.d("POSICION ENEMIGO", "(" + this.x + "," + this.y + ")");
 	}
 
 	@Override
@@ -147,20 +143,11 @@ public class Enemy extends GameCharacter {
 	private void drawSquare(Canvas canvas, Paint paint) {
 		paint.setColor(Color.parseColor("#ff69f8"));
 		paint.setStrokeWidth(STROKE_WIDTH);
-		int halfWidth = 30;
-
-		float xSquare = x;
-		float ySquare = y;
-		Path path = new Path();
-
-		path.moveTo(xSquare, ySquare + halfWidth);
-		path.lineTo(xSquare, ySquare - halfWidth);
-		path.lineTo(xSquare + (halfWidth * 2), ySquare - halfWidth);
-		path.lineTo(xSquare + (halfWidth * 2), ySquare + halfWidth);
-		path.lineTo(xSquare, ySquare + halfWidth);
-
-		path.close();
-		canvas.drawPath(path, paint);
+		int size = 20;
+		float x = this.x + getImageWidth() / 2f;
+		float y = this.y - getImageHeight() / 2f + 10;
+		canvas.drawRect(x - size, y - size,
+						x + size, y + size, paint);
 	}
 
 	private void drawX(Canvas canvas, Paint paint) {
