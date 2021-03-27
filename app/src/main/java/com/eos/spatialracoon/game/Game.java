@@ -46,7 +46,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private LevelSetting levelSetting;
 	private boolean lose = false;
 
-	//TODO: elena pasarlo a una clase (?)
+	//TODO: pasarlo a una clase (?)
 	private static int topScore;
 	private static int score;
 	private final String SCORE = "SCORE";
@@ -141,7 +141,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (lose) {
 			gameLoop.gameOver();
-			//TODO: elena musica morision (?)
+			//TODO:  musica morision (?)
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
 			getContext().startActivity(intent);
 		}
@@ -267,7 +267,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 				}
 			}
 		}
-		//TODO: elena poner animación de explosión por cada enemigo matado
+		//TODO: poner animación de explosión por cada enemigo matado
 		this.enemies.removeAll(killed);
 		return killed;
 	}

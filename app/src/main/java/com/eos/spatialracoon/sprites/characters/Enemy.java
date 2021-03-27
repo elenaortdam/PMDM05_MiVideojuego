@@ -68,9 +68,11 @@ public class Enemy extends GameCharacter {
 		int height = screen.getHeight() - super.getImageHeight();
 		int outScreen = -height / 4;
 		if (Math.random() <= X) {
-			point.set(generateRandom(0, (int) (screen.getWidth() / 3.5f)), outScreen);
+			Log.d("TEST", "1");
+			point.set(generateRandom(0, 700), outScreen);
 		} else {
-			point.set(generateRandom((int) (screen.getWidth() / 2f), screen.getWidth()), outScreen);
+			Log.d("TEST", "2");
+			point.set(generateRandom(1300, screen.getWidth()), outScreen);
 		}
 		return point;
 	}
