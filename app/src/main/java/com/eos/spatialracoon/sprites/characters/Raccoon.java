@@ -11,30 +11,28 @@ import com.eos.spatialracoon.enums.CharacterName;
 
 public class Raccoon extends GameCharacter {
 
-	private float middleImageHeight;
-	private float middleImageWidth;
+	private final float middleImageHeight;
+	private final float middleImageWidth;
 
 	public Raccoon(Context context) {
 		super(context, BitmapFactory.decodeResource(context.getResources(),
 													R.drawable.mapache), new Size(300, 400));
 
-		float x = super.getScreen().getWidth() / 2f - (float) super.getImageWidth() / 2;
-		float y = super.getScreen().getHeight() / 2f - (float) super.getImageHeight() / 2;
-		setX(x);
-		setY(y);
-
+		super.setX(super.getScreen().getWidth() / 2f);
+		super.setY(super.getScreen().getHeight() / 2f);
+		middleImageHeight = (float) super.getImageHeight() / 2;
+		middleImageWidth = (float) super.getImageWidth() / 2;
 		setName(CharacterName.RACCOON);
 	}
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
 
-		canvas.drawBitmap(super.getImage(), super.getX(), super.getY(), paint);
+		canvas.drawBitmap(super.getImage(), super.getX() - middleImageWidth, super.getY() - middleImageHeight, paint);
 		float cx = super.getScreen().getWidth() / 2f;
 		float cy = super.getScreen().getHeight() / 2f;
 		canvas.drawRect(cx - (float) super.getImageWidth() / 2, cy - (float) super.getImageHeight() / 2,
 						cx + (float) super.getImageWidth() / 2, cy + (float) super.getImageHeight() / 2, paint);
-//		canvas.drawCircle(cx, cy, (float) super.getImageWidth() / 2, paint);
 	}
 
 }
