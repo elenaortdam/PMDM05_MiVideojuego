@@ -26,7 +26,6 @@ public class Enemy extends GameCharacter {
 
 	private final int STROKE_WIDTH = 8;
 
-	private final float speed;
 	private float x;
 	private float y;
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
@@ -41,8 +40,9 @@ public class Enemy extends GameCharacter {
 	private boolean alive = true;
 
 	public Enemy(Game game, int level) {
-		super(game.getContext(), BitmapFactory.decodeResource(game.getContext().getResources(),
-															  R.drawable.asteroid),
+		super(game.getContext(),
+			  BitmapFactory.decodeResource(game.getContext().getResources(),
+										   R.drawable.asteroid),
 			  new Size(150, 150));
 		this.game = game;
 		this.screen = super.getScreen();
@@ -52,7 +52,6 @@ public class Enemy extends GameCharacter {
 		this.level = level;
 		Level levelSetting = new Level();
 		float ENEMY_SPEED = game.getHeight() / 20f / GameLoop.MAX_FPS;
-		speed = level * ENEMY_SPEED;
 		LevelSetting levelSettings = Level.getLevelSettings(level);
 		for (int i = 0; i < levelSettings.getMaxFigures(); i++) {
 			this.controlButtonNames.add(getRandomFigure());
@@ -66,7 +65,6 @@ public class Enemy extends GameCharacter {
 		point.set(generateRandom(0, screen.getWidth()), 0);
 
 		final float X = 0.5f;
-		final float MIN = 0.5f;
 
 		int height = screen.getHeight() - super.getImageHeight();
 		int outScreen = -height / 4;
