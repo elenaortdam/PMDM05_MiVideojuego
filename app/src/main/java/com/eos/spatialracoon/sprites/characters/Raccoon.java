@@ -34,7 +34,7 @@ public class Raccoon extends GameCharacter {
 		canvas.drawBitmap(super.getImage(),
 						  super.getX() - middleImageWidth,
 						  super.getY() - middleImageHeight, paint);
-		canvas.drawRect(collision, paint);
+//		canvas.drawRect(collision, paint);
 	}
 
 	public Rect getCollision() {

@@ -106,8 +106,8 @@ public class Enemy extends GameCharacter {
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
 		paint.setColor(Color.WHITE);
-		canvas.drawCircle(this.x + super.getImageWidth() / 2f, this.y + super.getImageHeight() / 2f,
-						  super.getImageWidth() / 2f, paint);
+//		canvas.drawCircle(this.x + super.getImageWidth() / 2f, this.y + super.getImageHeight() / 2f,
+//						  super.getImageWidth() / 2f, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
 			switch (controlButtonName) {
 				case X:
@@ -135,10 +135,10 @@ public class Enemy extends GameCharacter {
 		//TODO: elena dependiendo de la cantidad de figuras desplazar más a la derecha
 		float triangleX = x + 35;
 		float triangleY = y + 35;
-		path.moveTo(triangleX, triangleY - size); // Top
-		path.lineTo(triangleX - size, triangleY + size); // Bottom left
-		path.lineTo(triangleX + size, triangleY + size); // Bottom right
-		path.lineTo(triangleX, triangleY - size); // Back to Top
+		path.moveTo(triangleX, triangleY - size); // arriba
+		path.lineTo(triangleX - size, triangleY + size); // abajo izquierda
+		path.lineTo(triangleX + size, triangleY + size); // abajo derecha
+		path.lineTo(triangleX, triangleY - size); // Cerrar el triángulo
 		path.close();
 
 		canvas.drawPath(path, paint);
