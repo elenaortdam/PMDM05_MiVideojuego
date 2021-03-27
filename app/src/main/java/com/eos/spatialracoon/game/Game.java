@@ -74,7 +74,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		setOnTouchListener(this);
 		this.levelSetting = Level.getLevelSettings(1);
 		score = 0;
-		int DEFAULT_ENEMIES = 1;
+		int DEFAULT_ENEMIES = 2;
 //		int DEFAULT_ENEMIES = 5;
 		for (int i = 0; i < DEFAULT_ENEMIES; i++) {
 			createEnemy();
@@ -227,17 +227,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			float testY = enemy.getY();
 
 			//Vemos cual está más cerca
-			if (enemy.getX() < raccoon.getX()) { //izquierda
-				testX = raccoon.getX();
+			if (enemy.getX() < raccoonCollision.left) { //izquierda
+				testX = raccoonCollision.left;
 			}
-			if (enemy.getX() > raccoon.getX() + raccoon.getImageWidth()) {
-				testX = raccoon.getX() + raccoon.getImageWidth(); //derecha
+			if (enemy.getX() > raccoonCollision.right) {
+				testX = raccoonCollision.right; //derecha
 			}
-			if (enemy.getY() < raccoon.getY()) { //arriba
-				testY = raccoon.getY();
+			if (enemy.getY() < raccoonCollision.top) { //arriba
+				testY = raccoonCollision.top;
 			}
-			if (enemy.getY() > raccoon.getX() + raccoon.getImageHeight()) { //abajo
-				testY = raccoon.getX() + raccoon.getImageHeight();
+			if (enemy.getY() > raccoonCollision.bottom) { //abajo
+				testY = raccoonCollision.bottom;
 			}
 
 			// cogemos la distancia de los extremos más cercanos
@@ -250,9 +250,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 			if (test) {
 				Log.wtf("Colisión en: ", "(" + enemy.getX() + ", " + enemy.getY() + ")");
-				Log.wtf("COLLISION", "Catapum bum bum");
 			}
-			return false;
+			return test;
 		}
 		return false;
 	}
