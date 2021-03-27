@@ -32,7 +32,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
-<!--    TODO:elena poner las letras como las de wasted-->
     <TextView
             android:text="@string/record_game_over"
             android:layout_width="wrap_content"

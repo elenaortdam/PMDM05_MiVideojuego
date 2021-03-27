@@ -22,7 +22,6 @@ public class GameActivity extends AppCompatActivity {
 
 	}
 
-// TODO: elena cargar fondo sin cosas (NEXT)
 // TODO: elena musica al pulsar el botón
 //	TODO: elena musica de fondo (?)
 //	TODO: música al explotar enemigo

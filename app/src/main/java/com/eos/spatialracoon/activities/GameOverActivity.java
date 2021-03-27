@@ -22,7 +22,6 @@ public class GameOverActivity extends AppCompatActivity {
 		TextView score = findViewById(R.id.score);
 		record.setText(String.valueOf(Game.getTopScore()));
 		score.setText(String.valueOf(Game.getScore()));
-		//TODO: cuando se da al retry reiniciar score, y nivel
 		retry(racoon);
 		retry(retry);
 	}

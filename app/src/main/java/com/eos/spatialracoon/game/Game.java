@@ -143,9 +143,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			gameLoop.gameOver();
 			//TODO: elena musica morision (?)
 			Intent intent = new Intent().setClass(getContext(), GameOverActivity.class);
-//			updateMaxScore(getContext().getSharedPreferences(getResources().getString(R.string.app_name),
-//															 Context.MODE_PRIVATE));
-			//TODO: actualizar el score antes??
 			getContext().startActivity(intent);
 		}
 
@@ -215,7 +212,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 //
 //	}
 
-	//TODO: elena hacer bien la colisión con un círculo y una recta
 	public boolean gameOver() {
 
 		Rect raccoonCollision = raccoon.getCollision();
@@ -284,7 +280,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			Paint paint = new Paint();
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setColor(Color.WHITE);
-			//TODO: elena ver como hacer para que ocupe toda la pantalla
+			//TODO: ver como hacer para que ocupe toda la pantalla
 			canvas.drawBitmap(background, 0, -1, null);
 			for (ControlButton button : buttons) {
 				button.draw(canvas, paint);
@@ -292,10 +288,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			for (GameCharacter enemy : enemies) {
 				enemy.draw(canvas, paint);
 			}
-			//TODO: elena cambiar la tipografía
-//			Typeface typeface = Typeface.createFromAsset(getContext().getResources(),
-//														 "font/helvetica_bold.ttf");
-//			paint.setTypeface(typeface);
 			paint.setTextSize((float) (this.screen.getWidth() / 30));
 			paint.setColor(Color.WHITE);
 			canvas.drawText("PUNTOS: " + score + " - Nivel " + levelSetting.getLevel(),

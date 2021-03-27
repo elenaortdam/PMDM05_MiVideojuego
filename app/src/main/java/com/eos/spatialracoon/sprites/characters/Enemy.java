@@ -28,6 +28,7 @@ public class Enemy extends GameCharacter {
 
 	private float x;
 	private float y;
+	//TODO: quitar la lista
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
 
 	private final Screen screen;
@@ -132,7 +133,6 @@ public class Enemy extends GameCharacter {
 		int size = 25;
 		Path path = new Path();
 		//TODO: elena con las nuevas figuras hacer más hacia arriba
-		//TODO: elena dependiendo de la cantidad de figuras desplazar más a la derecha
 		float triangleX = x + 35;
 		float triangleY = y + 35;
 		path.moveTo(triangleX, triangleY - size); // arriba
