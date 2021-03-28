@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
+import com.eos.spatialracoon.Utilities;
 
 public class Star extends GameCharacter {
 
@@ -14,9 +15,9 @@ public class Star extends GameCharacter {
 
 	public Star(Context context) {
 		super(context, BitmapFactory.decodeResource(context.getResources(), R.drawable.golden_star),
-			  new Size(100, 100));
-		super.setX(200);
-		super.setY(300);
+			  new Size(150, 150));
+		super.setX(Utilities.generateRandom((int) (super.getImageWidth() / 2f), getScreen().getWidth()));
+		super.setY(Utilities.generateRandom((int) (super.getImageHeight() / 2f), getScreen().getHeight()));
 	}
 
 	public void isTouched(float x, float y) {

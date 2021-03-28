@@ -90,7 +90,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 															  Context.MODE_PRIVATE);
 		playBackgroundMusic();
 		killSongPlayed = false;
-		newSpecialStarAppear = Utilities.generateRandom(100, 500);
+		newSpecialStarAppear = Utilities.generateRandom(500, 1000);
 	}
 
 	private void playBackgroundMusic() {
@@ -147,8 +147,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		enemies.add(new Enemy(this, levelSetting.getLevel()));
 	}
 
-	//TODO: cada x tiempo mostrar un planeta o algo clickable que haga desaparecer todos los enemigos?
-
 	/**
 	 * Este método actualiza el estado del juego. Contiene la lógica del videojuego
 	 * generando los nuevos estados y dejando listo el sistema para un repintado.
@@ -157,7 +155,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (newSpecialStarAppear == 0) {
 			star = new Star(getContext());
-			newSpecialStarAppear = Utilities.generateRandom(100, 200);
+			newSpecialStarAppear = Utilities.generateRandom(1000, 2000);
 		}
 		newSpecialStarAppear--;
 
