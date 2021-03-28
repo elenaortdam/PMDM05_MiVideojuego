@@ -67,6 +67,7 @@ public class Enemy extends GameCharacter {
 
 		final float X = 0.5f;
 
+		//TODO: quitar el hardcoded
 		int height = screen.getHeight() - super.getImageHeight();
 		int outScreen = -height / 4;
 		if (Math.random() <= X) {
@@ -133,7 +134,7 @@ public class Enemy extends GameCharacter {
 		paint.setStrokeWidth(STROKE_WIDTH);
 		int size = 25;
 		Path path = new Path();
-		//TODO: elena con las nuevas figuras hacer más hacia arriba
+		//TODO: hacer más hacia arriba
 		float triangleX = x + 35;
 		float triangleY = y + 35;
 		path.moveTo(triangleX, triangleY - size); // arriba

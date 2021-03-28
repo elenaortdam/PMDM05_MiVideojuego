@@ -373,7 +373,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return true;
 	}
 
-	//TODO: elena quitar todos los deprecated
+	//TODO: quitar todos los deprecated
 
 	public Raccoon getRaccoon() {
 		return this.raccoon;

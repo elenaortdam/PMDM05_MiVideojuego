@@ -42,6 +42,7 @@ public abstract class ControlButton {
 		if (x > this.x && x < this.x + getButtonWidth()
 				&& y > this.y && y < this.y + getButtonHeight()) {
 			touched = true;
+			//TODO: aumentar volumen de los disparos
 			mediaPlayer = MediaPlayer.create(this.context, R.raw.blaster_sound);
 			mediaPlayer.setOnCompletionListener(MediaPlayer::release);
 			mediaPlayer.start();
