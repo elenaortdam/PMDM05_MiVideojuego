@@ -20,6 +20,7 @@ public class Raccoon extends GameCharacter {
 		super(context, BitmapFactory.decodeResource(context.getResources(),
 													R.drawable.mapache), new Size(250, 350));
 
+		//En medio abajo
 		super.setX(super.getScreen().getWidth() / 2f);
 		super.setY(super.getScreen().getHeight() / 1.5f);
 		middleImageHeight = (float) super.getImageHeight() / 2;

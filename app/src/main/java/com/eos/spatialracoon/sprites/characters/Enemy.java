@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.eos.spatialracoon.Utilities.generateRandom;
+
 public class Enemy extends GameCharacter {
 
 	private final int STROKE_WIDTH = 8;
@@ -82,10 +84,7 @@ public class Enemy extends GameCharacter {
 		return ButtonName.values()[randomFigure];
 	}
 
-	private int generateRandom(int min, int max) {
-		return (int) (Math.random() * (max - min + 1) + min);
 
-	}
 
 	public void moveEnemy(LevelSetting levelSetting) {
 
