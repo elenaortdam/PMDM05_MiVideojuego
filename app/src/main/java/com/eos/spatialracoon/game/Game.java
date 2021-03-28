@@ -33,6 +33,7 @@ import com.eos.spatialracoon.sprites.buttons.XButton;
 import com.eos.spatialracoon.sprites.characters.Enemy;
 import com.eos.spatialracoon.sprites.characters.GameCharacter;
 import com.eos.spatialracoon.sprites.characters.Raccoon;
+import com.eos.spatialracoon.sprites.characters.Star;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final SurfaceHolder holder;
 	private GameLoop gameLoop;
 	private final List<ControlButton> buttons = new ArrayList<>();
-	private final List<GameCharacter> enemies = new ArrayList<>();
+	private List<GameCharacter> enemies = new ArrayList<>();
 	private LevelSetting levelSetting;
 	private boolean lose = false;
 
@@ -56,14 +57,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private final Raccoon raccoon;
 
 	private int newEnemyFrames = 500; //frames que restan hasta generar nuevo enemigo
+	private int newSpecialStarAppear;
 
 	private final List<Touch> touchs = new ArrayList<>();
 	private final Screen screen;
 
 	private final SharedPreferences sharedPreferences;
 
-	MediaPlayer mediaPlayer; //para reproducir la música de fondo
-	private boolean killSongPlayed = false;
+	private MediaPlayer mediaPlayer; //para reproducir la música de fondo
+	private boolean killSongPlayed;
+
+	private Star star;
 
 	public Game(Activity activity) {
 		super(activity);
@@ -86,6 +90,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 															  Context.MODE_PRIVATE);
 		playBackgroundMusic();
 		killSongPlayed = false;
+		newSpecialStarAppear = Utilities.generateRandom(500, 1000);
 	}
 
 	private void playBackgroundMusic() {
@@ -142,13 +147,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		enemies.add(new Enemy(this, levelSetting.getLevel()));
 	}
 
-	//TODO: cada x tiempo mostrar un planeta o algo clickable que haga desaparecer todos los enemigos?
-
 	/**
 	 * Este método actualiza el estado del juego. Contiene la lógica del videojuego
 	 * generando los nuevos estados y dejando listo el sistema para un repintado.
 	 */
 	public void update() {
+
+		if (newSpecialStarAppear == 0) {
+			star = new Star(getContext());
+			newSpecialStarAppear = Utilities.generateRandom(1000, 2000);
+		}
+		newSpecialStarAppear--;
 
 		if (lose) {
 			gameLoop.gameOver();
@@ -162,11 +171,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			Enemy enemy = (Enemy) character;
 			enemy.moveEnemy(levelSetting);
 		}
-		//Eliminamos las figuras de los enemigos
+		List<GameCharacter> enemiesKilled;
 
-		List<Enemy> enemiesKilled = killEnemies();
-		if (enemiesKilled.size() > 0) {
+		if (star != null && star.touched()) {
+			star.removeTouch();
+			star = null;
+			enemiesKilled = new ArrayList<>(this.enemies);
+			this.enemies = new ArrayList<>();
 			createNewEnemies();
+		} else {
+			//Eliminamos las figuras de los enemigos
+			enemiesKilled = killEnemies();
+			if (enemiesKilled.size() > 0) {
+				createNewEnemies();
+			}
+
 		}
 
 		updateScore(enemiesKilled);
@@ -204,8 +223,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 	}
 
-	public void updateScore(List<Enemy> killedEnemies) {
-		for (Enemy enemy : killedEnemies) {
+	public void updateScore(List<GameCharacter> killedEnemies) {
+		for (GameCharacter gameCharacter : killedEnemies) {
+			Enemy enemy = (Enemy) gameCharacter;
 			score += enemy.getEnemyPoints();
 		}
 		topScore = this.sharedPreferences.getInt(SCORE, 0);
@@ -255,9 +275,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		return false;
 	}
 
-	private List<Enemy> killEnemies() {
+	private List<GameCharacter> killEnemies() {
 
-		List<Enemy> killed = new ArrayList<>();
+		List<GameCharacter> killed = new ArrayList<>();
 		for (ControlButton button : buttons) {
 			if (button.isTouched()) {
 				for (GameCharacter character : enemies) {
@@ -270,7 +290,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 				}
 			}
 		}
-		//TODO: poner animación de explosión por cada enemigo matado
 		this.enemies.removeAll(killed);
 		return killed;
 	}
@@ -297,6 +316,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 							75, 75, paint);
 
 			raccoon.draw(canvas, paint);
+			if (star != null) {
+				star.draw(canvas, paint);
+			}
 		}
 	}
 
@@ -341,6 +363,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 					touchs.add(index, new Touch(x, y, index));
 					for (ControlButton button : buttons) {
 						button.isTouched(x, y);
+					}
+					if (star != null) {
+						star.isTouched(x, y);
 					}
 				}
 				break;

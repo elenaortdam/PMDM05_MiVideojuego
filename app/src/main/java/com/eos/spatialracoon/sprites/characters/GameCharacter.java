@@ -24,12 +24,6 @@ public abstract class GameCharacter {
 		this.screen = Utilities.calculateScreenSize(context);
 	}
 
-	@Deprecated
-	public GameCharacter(Context context, Bitmap image) {
-		this(context);
-		this.image = image;
-	}
-
 	public GameCharacter(Context context, Bitmap image, Size size) {
 		this(context);
 		this.image = Bitmap.createScaledBitmap(image, size.getWidth(), size.getHeight(),

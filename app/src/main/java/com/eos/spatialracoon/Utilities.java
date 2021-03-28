@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 
 public class Utilities {
@@ -23,9 +22,6 @@ public class Utilities {
 			Display display = activity.getWindowManager().getDefaultDisplay();
 			screen = new Screen(display.getWidth(), display.getHeight());
 		}
-		Log.i(Utilities.class.getSimpleName(), String.format("Pantalla: alto %d, ancho %d",
-															 screen.getWidth(), screen.getHeight()));
-
 		return screen;
 	}
 
@@ -33,10 +29,11 @@ public class Utilities {
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int width = metrics.widthPixels;
 		int height = metrics.heightPixels;
-		Screen screen = new Screen(width, height);
-//		Log.i(Utilities.class.getSimpleName(), String.format("Pantalla: alto %d, ancho %d",
-//															 screen.getWidth(), screen.getHeight()));
 
-		return screen;
+		return new Screen(width, height);
+	}
+
+	public static int generateRandom(int min, int max) {
+		return (int) (Math.random() * (max - min + 1) + min);
 	}
 }
