@@ -22,9 +22,6 @@ public class GameActivity extends AppCompatActivity {
 
 	}
 
-// TODO: elena musica al pulsar el botón
-//	TODO: música al explotar enemigo
-
 	private void hideSystemUI() {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
 			//A partir de kitkat
@@ -53,7 +50,4 @@ public class GameActivity extends AppCompatActivity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
-
-	//TODO: elena FINAL refactor
-
 }

@@ -317,7 +317,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		boolean retry = true;
 		while (retry) {
 			try {
-//				gameLoop.isRunning(false);
 				gameLoop.join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
