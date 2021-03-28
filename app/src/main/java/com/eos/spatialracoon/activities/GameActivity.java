@@ -23,7 +23,6 @@ public class GameActivity extends AppCompatActivity {
 	}
 
 // TODO: elena musica al pulsar el botón
-//	TODO: elena musica de fondo (?)
 //	TODO: música al explotar enemigo
 
 	private void hideSystemUI() {
