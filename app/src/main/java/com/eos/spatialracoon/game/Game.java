@@ -336,7 +336,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 			case MotionEvent.ACTION_POINTER_DOWN:
-				boolean hasTouch = true;
 				x = event.getX();
 				y = event.getY();
 				synchronized (this) {

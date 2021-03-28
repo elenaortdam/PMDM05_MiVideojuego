@@ -4,13 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 
+import com.eos.spatialracoon.R;
 import com.eos.spatialracoon.Screen;
-import com.eos.spatialracoon.Touch;
 import com.eos.spatialracoon.Utilities;
 import com.eos.spatialracoon.enums.ButtonName;
-
-import java.util.List;
 
 public abstract class ControlButton {
 
@@ -22,6 +21,7 @@ public abstract class ControlButton {
 	private final Context context;
 	private final int DIMENSION = 150;
 	private final Screen screen;
+	private MediaPlayer mediaPlayer;
 
 	public ControlButton(Context context) {
 		this.context = context;
@@ -38,24 +38,13 @@ public abstract class ControlButton {
 
 	}
 
-	public boolean isTouched(float x, float y) {
+	public void isTouched(float x, float y) {
 		if (x > this.x && x < this.x + getButtonWidth()
 				&& y > this.y && y < this.y + getButtonHeight()) {
 			touched = true;
-		}
-		return touched;
-	}
-
-	@Deprecated
-	public void checkButtonRelased(List<Touch> touchs) {
-		boolean aux = false;
-		for (Touch touch : touchs) {
-			if (isTouched(touch.getX(), touch.getY())) {
-				aux = true;
-			}
-		}
-		if (!aux) {
-			this.touched = false;
+			mediaPlayer = MediaPlayer.create(this.context, R.raw.blaster_sound);
+			mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+			mediaPlayer.start();
 		}
 	}
 
