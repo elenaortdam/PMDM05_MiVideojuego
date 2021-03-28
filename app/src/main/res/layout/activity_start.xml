@@ -78,4 +78,25 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="503dp" />
 
+    <Button
+            android:text="@string/how_play"
+            android:layout_width="250dp"
+            android:layout_height="30sp"
+            android:id="@+id/instruction"
+            android:fontFamily="@font/gta"
+            android:textSize="30sp"
+            android:background="#E91E63"
+            android:minHeight="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingTop="0dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="95dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="95dp"
+            android:layout_above="@+id/record_string"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentTop="true" />
+
 </RelativeLayout>
