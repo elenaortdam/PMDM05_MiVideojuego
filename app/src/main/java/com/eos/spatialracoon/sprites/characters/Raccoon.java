@@ -25,8 +25,10 @@ public class Raccoon extends GameCharacter {
 		super.setY(super.getScreen().getHeight() / 1.5f);
 		middleImageHeight = (float) super.getImageHeight() / 2;
 		middleImageWidth = (float) super.getImageWidth() / 2;
-		this.collision = new Rect((int) (super.getX() - middleImageWidth), (int) (super.getY() - middleImageHeight),
-								  (int) (super.getX() + middleImageWidth), (int) (super.getY() + middleImageHeight));
+		this.collision = new Rect((int) (super.getX() - middleImageWidth),
+								  (int) (super.getY() - middleImageHeight),
+								  (int) (super.getX() + middleImageWidth),
+								  (int) (super.getY() + middleImageHeight));
 		setName(CharacterName.RACCOON);
 	}
 
@@ -35,7 +37,7 @@ public class Raccoon extends GameCharacter {
 		canvas.drawBitmap(super.getImage(),
 						  super.getX() - middleImageWidth,
 						  super.getY() - middleImageHeight, paint);
-//		canvas.drawRect(collision, paint);
+		canvas.drawRect(collision, paint);
 	}
 
 	public Rect getCollision() {

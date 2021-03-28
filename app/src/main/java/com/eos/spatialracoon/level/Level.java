@@ -9,7 +9,6 @@ public class Level {
 
 	private static final HashMap<Integer, LevelSetting> levelSettings = createLevel();
 
-	//TODO: hacer más niveles?
 	private static HashMap<Integer, LevelSetting> createLevel() {
 		HashMap<Integer, LevelSetting> levelSettings = new HashMap<>();
 		levelSettings.put(1, new LevelSetting(1, 10, 1, 500,

@@ -29,7 +29,6 @@ public class Star extends GameCharacter {
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
-		//TODO: calcular coordenadas random
 		canvas.drawBitmap(super.getImage(),
 						  super.getX() - super.getImageWidth() / 2f,
 						  super.getY() - super.getImageHeight() / 2f, paint);

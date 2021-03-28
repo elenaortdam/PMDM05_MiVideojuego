@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import android.util.Size;
 
@@ -41,6 +42,7 @@ public class Enemy extends GameCharacter {
 	private Context context;
 	private final int level;
 	private boolean alive = true;
+	private final Rect collision;
 
 	public Enemy(Game game, int level) {
 		super(game.getContext(),
@@ -58,6 +60,12 @@ public class Enemy extends GameCharacter {
 			this.controlButtonNames.add(getRandomFigure());
 		}
 		this.enemyPoints = levelSettings.getKilledEnemiesPoint() * this.controlButtonNames.size();
+
+		Log.wtf("Posicion puta colision de mierda", "(" + x + ", " + y + ")");
+		this.collision = new Rect((int) (this.x),
+								  (int) (this.y),
+								  (int) (this.x + super.getImageWidth()),
+								  (int) (this.y + super.getImageHeight()));
 		setName(CharacterName.METEOROID);
 	}
 
@@ -71,10 +79,8 @@ public class Enemy extends GameCharacter {
 		int height = screen.getHeight() - super.getImageHeight();
 		int outScreen = -height / 4;
 		if (Math.random() <= X) {
-			Log.d("TEST", "1");
 			point.set(generateRandom(0, 700), outScreen);
 		} else {
-			Log.d("TEST", "2");
 			point.set(generateRandom(1300, screen.getWidth()), outScreen);
 		}
 		return point;
@@ -84,8 +90,6 @@ public class Enemy extends GameCharacter {
 		int randomFigure = generateRandom(0, 3);
 		return ButtonName.values()[randomFigure];
 	}
-
-
 
 	public void moveEnemy(LevelSetting levelSetting) {
 
@@ -102,6 +106,12 @@ public class Enemy extends GameCharacter {
 		} else {
 			this.y -= levelSetting.getEnemySpeed();
 		}
+
+		this.collision.set((int) (this.x),
+						   (int) (this.y),
+						   (int) (this.x + super.getImageWidth()),
+						   (int) (this.y + super.getImageHeight()));
+
 		Log.d("Posicion enemigo", "(" + x + ", " + y + ")");
 	}
 
@@ -109,6 +119,7 @@ public class Enemy extends GameCharacter {
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
 		paint.setColor(Color.WHITE);
+		canvas.drawRect(collision, paint);
 //		canvas.drawCircle(this.x + super.getImageWidth() / 2f, this.y + super.getImageHeight() / 2f,
 //						  super.getImageWidth() / 2f, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
@@ -219,5 +230,9 @@ public class Enemy extends GameCharacter {
 
 	public int getEnemyPoints() {
 		return enemyPoints;
+	}
+
+	public Rect getCollision() {
+		return collision;
 	}
 }

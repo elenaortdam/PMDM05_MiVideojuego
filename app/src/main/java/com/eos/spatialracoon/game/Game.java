@@ -240,28 +240,32 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		Rect raccoonCollision = raccoon.getCollision();
 		for (GameCharacter character : enemies) {
 			Enemy enemy = (Enemy) character;
-
-			// temporary variables to set edges for testing
-			float testX = enemy.getX();
-			float testY = enemy.getY();
+			Rect enemyCollision = enemy.getCollision();
+			if (raccoonCollision.intersect(enemyCollision)) {
+				return true;
+			}
+/*
+			// Variables temporales para ver los border
+			float finalX = enemy.getX();
+			float finalY = enemy.getY();
 
 			//Vemos cual está más cerca
 			if (enemy.getX() < raccoonCollision.left) { //izquierda
-				testX = raccoonCollision.left;
+				finalX = raccoonCollision.left;
 			}
-			if (enemy.getX() > raccoonCollision.right) {
-				testX = raccoonCollision.right; //derecha
+			if (enemy.getX() > raccoonCollision.right) { //derecha
+				finalX = raccoonCollision.right;
 			}
 			if (enemy.getY() < raccoonCollision.top) { //arriba
-				testY = raccoonCollision.top;
+				finalY = raccoonCollision.top;
 			}
 			if (enemy.getY() > raccoonCollision.bottom) { //abajo
-				testY = raccoonCollision.bottom;
+				finalY = raccoonCollision.bottom;
 			}
 
 			// cogemos la distancia de los extremos más cercanos
-			float distX = enemy.getX() - testX;
-			float distY = enemy.getY() - testY;
+			float distX = enemy.getX() - finalX;
+			float distY = enemy.getY() - finalY;
 			double distance = Math.sqrt((distX * distX) + (distY * distY));
 
 			// Si la distancia es menor que el radio hay colisión
@@ -270,7 +274,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			if (test) {
 				Log.wtf("Colisión en: ", "(" + enemy.getX() + ", " + enemy.getY() + ")");
 			}
+
+
 			return test;
+
+ */
 		}
 		return false;
 	}
