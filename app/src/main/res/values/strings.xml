@@ -7,4 +7,9 @@
     <string name="retry_string">Reintentar</string>
     <string name="record_game_over">Récord</string>
     <string name="puntuacion">Puntuación</string>
+    <string name="how_play">Cómo jugar</string>
+    <string name="instructions">Nuestro mapache está atrapado en el espacio y tiene que enfrentarse a todos los
+								 asteroides que quieren destruirlo. Para acabar con ellos pulsa el botón de la
+								 figura que hay encima del asteroide.
+                                 PD: las estrellas son tus amigas no tengas miedo de pulsar sobre ellas ;)</string>
 </resources>

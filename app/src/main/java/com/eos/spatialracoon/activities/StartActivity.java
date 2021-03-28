@@ -1,11 +1,13 @@
 package com.eos.spatialracoon.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ public class StartActivity extends AppCompatActivity {
 		record.setText(String.valueOf(topScore));
 		ImageView touch = findViewById(R.id.touch);
 
+		//Animación pulsar
 		TranslateAnimation clickAnimation = new TranslateAnimation(0, -80,
 																   0, 80);
 		clickAnimation.setDuration(1500);  // duración de la animación
@@ -35,6 +38,7 @@ public class StartActivity extends AppCompatActivity {
 		clickAnimation.setRepeatMode(Animation.REVERSE);
 		touch.startAnimation(clickAnimation);
 
+		//Animación del mapache (subir y bajar)
 		TranslateAnimation raccoonAnimation = new TranslateAnimation(0, 0,
 																	 0, 50);
 		raccoonAnimation.setDuration(1000);  // duración de la animación
@@ -42,6 +46,17 @@ public class StartActivity extends AppCompatActivity {
 		raccoonAnimation.setRepeatMode(Animation.REVERSE);
 		raccoon.startAnimation(raccoonAnimation);
 
+		Button instructions = findViewById(R.id.instruction);
+		instructions.setOnClickListener(v -> showInstructions());
 	}
-	//TODO: elena botón instrucciones
+
+	public void showInstructions() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("Intrucciones");
+		alert.setMessage(getString(R.string.instructions));
+
+		alert.setPositiveButton("Ok", null);
+		alert.show();
+
+	}
 }
