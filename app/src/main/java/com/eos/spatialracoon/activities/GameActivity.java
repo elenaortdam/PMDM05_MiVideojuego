@@ -34,12 +34,7 @@ public class GameActivity extends AppCompatActivity {
 							| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 			//cuando se presiona volumen, por ejemplo, se cambia la visibilidad, hay que volver
 			//a ocultar
-			game.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-				@Override
-				public void onSystemUiVisibilityChange(int visibility) {
-					hideSystemUI();
-				}
-			});
+			game.setOnSystemUiVisibilityChangeListener(visibility -> hideSystemUI());
 		}
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB &&
 				Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {

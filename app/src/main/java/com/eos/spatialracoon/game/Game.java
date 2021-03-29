@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,8 +19,8 @@ import android.view.View;
 
 import com.eos.spatialracoon.R;
 import com.eos.spatialracoon.Screen;
+import com.eos.spatialracoon.ScreenUtility;
 import com.eos.spatialracoon.Touch;
-import com.eos.spatialracoon.Utilities;
 import com.eos.spatialracoon.activities.GameOverActivity;
 import com.eos.spatialracoon.level.Level;
 import com.eos.spatialracoon.level.LevelSetting;
@@ -48,7 +47,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	private LevelSetting levelSetting;
 	private boolean lose = false;
 
-	//TODO: pasarlo a una clase (?)
 	private static int topScore;
 	private static int score;
 	private final String SCORE = "SCORE";
@@ -74,11 +72,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		holder = getHolder();
 		holder.addCallback(this);
 
-		this.screen = Utilities.calculateScreenSize(getContext());
+		this.screen = ScreenUtility.calculateScreenSize(getContext());
 		loadBackground();
 		loadControlButtons();
 		this.raccoon = new Raccoon(this.getContext());
-		Log.d("Posicion mapache", "(" + raccoon.getX() + ", " + raccoon.getY() + ")");
 		setOnTouchListener(this);
 		this.levelSetting = Level.getLevelSettings(1);
 		score = 0;
@@ -90,7 +87,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 															  Context.MODE_PRIVATE);
 		playBackgroundMusic();
 		killSongPlayed = false;
-		newSpecialStarAppear = Utilities.generateRandom(500, 1000);
+		//Tiempo en el que se va a generae la estrella
+		newSpecialStarAppear = ScreenUtility.generateRandom(500, 1000);
 	}
 
 	private void playBackgroundMusic() {
@@ -107,8 +105,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		// se crea la superficie, creamos el game loop
-
 		// Para interceptar los eventos de la SurfaceView
 		getHolder().addCallback(this);
 
@@ -155,7 +151,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 
 		if (newSpecialStarAppear == 0) {
 			star = new Star(getContext());
-			newSpecialStarAppear = Utilities.generateRandom(1000, 2000);
+			newSpecialStarAppear = ScreenUtility.generateRandom(1000, 2000);
 		}
 		newSpecialStarAppear--;
 
@@ -244,41 +240,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			if (raccoonCollision.intersect(enemyCollision)) {
 				return true;
 			}
-/*
-			// Variables temporales para ver los border
-			float finalX = enemy.getX();
-			float finalY = enemy.getY();
-
-			//Vemos cual está más cerca
-			if (enemy.getX() < raccoonCollision.left) { //izquierda
-				finalX = raccoonCollision.left;
-			}
-			if (enemy.getX() > raccoonCollision.right) { //derecha
-				finalX = raccoonCollision.right;
-			}
-			if (enemy.getY() < raccoonCollision.top) { //arriba
-				finalY = raccoonCollision.top;
-			}
-			if (enemy.getY() > raccoonCollision.bottom) { //abajo
-				finalY = raccoonCollision.bottom;
-			}
-
-			// cogemos la distancia de los extremos más cercanos
-			float distX = enemy.getX() - finalX;
-			float distY = enemy.getY() - finalY;
-			double distance = Math.sqrt((distX * distX) + (distY * distY));
-
-			// Si la distancia es menor que el radio hay colisión
-			boolean test = distance <= enemy.getImageHeight() / 2f;
-
-			if (test) {
-				Log.wtf("Colisión en: ", "(" + enemy.getX() + ", " + enemy.getY() + ")");
-			}
-
-
-			return test;
-
- */
 		}
 		return false;
 	}
@@ -310,7 +271,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			Paint paint = new Paint();
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setColor(Color.WHITE);
-			//TODO: ver como hacer para que ocupe toda la pantalla
 			canvas.drawBitmap(background, 0, -1, null);
 			for (ControlButton button : buttons) {
 				button.draw(canvas, paint);
@@ -320,9 +280,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 			}
 			paint.setTextSize((float) (this.screen.getWidth() / 30));
 			paint.setColor(Color.WHITE);
+			//Actualizamos los puntos
 			canvas.drawText("PUNTOS: " + score + " - Nivel " + levelSetting.getLevel(),
 							75, 75, paint);
 
+			//Dibujamos al mapache
 			raccoon.draw(canvas, paint);
 			if (star != null) {
 				star.draw(canvas, paint);
@@ -331,8 +293,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 	}
 
 	private void killMusic() {
-//		mediaPlayer = new MediaPlayer();
-		mediaPlayer = MediaPlayer.create(getContext(), R.raw.quack);
+		MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.quack);
 		if (!killSongPlayed) {
 			mediaPlayer.setLooping(false);
 			mediaPlayer.start();
@@ -340,7 +301,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 	}
 
-	//TODO: liberar recursos al destruir
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 
@@ -380,8 +340,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Surface
 		}
 		return true;
 	}
-
-	//TODO: quitar todos los deprecated
 
 	public Raccoon getRaccoon() {
 		return this.raccoon;

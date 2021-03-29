@@ -1,6 +1,5 @@
 package com.eos.spatialracoon.sprites.characters;
 
-import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.eos.spatialracoon.Utilities.generateRandom;
+import static com.eos.spatialracoon.ScreenUtility.generateRandom;
 
 public class Enemy extends GameCharacter {
 
@@ -31,15 +29,12 @@ public class Enemy extends GameCharacter {
 
 	private float x;
 	private float y;
-	//TODO: quitar la lista
 	private final List<ButtonName> controlButtonNames = new ArrayList<>();
 
 	private final Screen screen;
 	private final int enemyPoints;
 
 	private final Game game;
-	@Deprecated
-	private Context context;
 	private final int level;
 	private boolean alive = true;
 	private final Rect collision;
@@ -61,7 +56,6 @@ public class Enemy extends GameCharacter {
 		}
 		this.enemyPoints = levelSettings.getKilledEnemiesPoint() * this.controlButtonNames.size();
 
-		Log.wtf("Posicion puta colision de mierda", "(" + x + ", " + y + ")");
 		this.collision = new Rect((int) (this.x),
 								  (int) (this.y),
 								  (int) (this.x + super.getImageWidth()),
@@ -75,13 +69,12 @@ public class Enemy extends GameCharacter {
 
 		final float X = 0.5f;
 
-		//TODO: quitar el hardcoded
 		int height = screen.getHeight() - super.getImageHeight();
-		int outScreen = -height / 4;
+		int outScreen = -100;
 		if (Math.random() <= X) {
-			point.set(generateRandom(0, 700), outScreen);
+			point.set(generateRandom(0, screen.getWidth() / 3), outScreen);
 		} else {
-			point.set(generateRandom(1300, screen.getWidth()), outScreen);
+			point.set(generateRandom((int) (screen.getWidth() / 1.6f), screen.getWidth()), outScreen);
 		}
 		return point;
 	}
@@ -107,21 +100,20 @@ public class Enemy extends GameCharacter {
 			this.y -= levelSetting.getEnemySpeed();
 		}
 
+		int size = 20;
 		this.collision.set((int) (this.x),
 						   (int) (this.y),
-						   (int) (this.x + super.getImageWidth()),
-						   (int) (this.y + super.getImageHeight()));
+						   (int) (this.x + super.getImageWidth() - size),
+						   (int) (this.y + super.getImageHeight() - size));
 
-		Log.d("Posicion enemigo", "(" + x + ", " + y + ")");
 	}
 
 	@Override
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(super.getImage(), this.x, this.y, paint);
 		paint.setColor(Color.WHITE);
-		canvas.drawRect(collision, paint);
-//		canvas.drawCircle(this.x + super.getImageWidth() / 2f, this.y + super.getImageHeight() / 2f,
-//						  super.getImageWidth() / 2f, paint);
+		//Colisión que tiene el enemigo
+//		canvas.drawRect(collision, paint);
 		for (ButtonName controlButtonName : this.controlButtonNames) {
 			switch (controlButtonName) {
 				case X:
@@ -145,7 +137,6 @@ public class Enemy extends GameCharacter {
 		paint.setStrokeWidth(STROKE_WIDTH);
 		int size = 25;
 		Path path = new Path();
-		//TODO: hacer más hacia arriba
 		float triangleX = x + 35;
 		float triangleY = y + 35;
 		path.moveTo(triangleX, triangleY - size); // arriba

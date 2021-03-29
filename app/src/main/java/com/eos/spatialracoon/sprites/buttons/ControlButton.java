@@ -8,7 +8,7 @@ import android.media.MediaPlayer;
 
 import com.eos.spatialracoon.R;
 import com.eos.spatialracoon.Screen;
-import com.eos.spatialracoon.Utilities;
+import com.eos.spatialracoon.ScreenUtility;
 import com.eos.spatialracoon.enums.ButtonName;
 
 public abstract class ControlButton {
@@ -25,7 +25,7 @@ public abstract class ControlButton {
 
 	public ControlButton(Context context) {
 		this.context = context;
-		this.screen = Utilities.calculateScreenSize(context);
+		this.screen = ScreenUtility.calculateScreenSize(context);
 	}
 
 	public ControlButton(Context context, Bitmap image) {
