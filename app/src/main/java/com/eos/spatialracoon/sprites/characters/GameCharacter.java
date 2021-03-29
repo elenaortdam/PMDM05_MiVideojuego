@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.Size;
 
 import com.eos.spatialracoon.Screen;
-import com.eos.spatialracoon.Utilities;
+import com.eos.spatialracoon.ScreenUtility;
 import com.eos.spatialracoon.enums.CharacterName;
 
 public abstract class GameCharacter {
@@ -21,7 +21,7 @@ public abstract class GameCharacter {
 
 	public GameCharacter(Context context) {
 		this.context = context;
-		this.screen = Utilities.calculateScreenSize(context);
+		this.screen = ScreenUtility.calculateScreenSize(context);
 	}
 
 	public GameCharacter(Context context, Bitmap image, Size size) {

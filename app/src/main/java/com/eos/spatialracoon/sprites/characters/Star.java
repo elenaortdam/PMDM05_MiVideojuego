@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.Size;
 
 import com.eos.spatialracoon.R;
-import com.eos.spatialracoon.Utilities;
+import com.eos.spatialracoon.ScreenUtility;
 
 public class Star extends GameCharacter {
 
@@ -16,13 +16,15 @@ public class Star extends GameCharacter {
 	public Star(Context context) {
 		super(context, BitmapFactory.decodeResource(context.getResources(), R.drawable.golden_star),
 			  new Size(150, 150));
-		super.setX(Utilities.generateRandom((int) (super.getImageWidth() / 2f), getScreen().getWidth()));
-		super.setY(Utilities.generateRandom((int) (super.getImageHeight() / 2f), getScreen().getHeight()));
+		super.setX(ScreenUtility.generateRandom((int) (super.getImageWidth() / 2f), getScreen().getWidth()));
+		super.setY(ScreenUtility.generateRandom((int) (super.getImageHeight() / 2f), getScreen().getHeight()));
 	}
 
 	public void isTouched(float x, float y) {
-		if (x > super.getX() && x < super.getX() + getImageWidth()
-				&& y > super.getY() && y < super.getY() + getImageHeight()) {
+		//Aumentamos el tamaño para que sea más fácil pulsar sobre la estrella
+		int increase = 50;
+		if (x + increase > super.getX() && x < super.getX() + getImageWidth() + increase
+				&& y + increase > super.getY() && y < super.getY() + getImageHeight() + increase) {
 			touched = true;
 		}
 	}
